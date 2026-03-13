@@ -1,9 +1,10 @@
 // Firebase Configuration (Loaded from firebase-config.js)
-const firebaseConfig = window.CineMaxConfig ? window.CineMaxConfig.firebase : {
-    apiKey: "MISSING_KEY",
+// If you are seeing errors, make sure firebase-config.js exists and has valid keys.
+const firebaseConfig = (window.CineMaxConfig && window.CineMaxConfig.firebase) ? window.CineMaxConfig.firebase : {
+    apiKey: "MISSING",
     authDomain: "MISSING",
     projectId: "MISSING",
-    databaseURL: "MISSING",
+    databaseURL: "https://missing-config.firebaseio.com", // Prevents fatal parse error
     storageBucket: "MISSING",
     messagingSenderId: "000000",
     appId: "MISSING"
@@ -15,15 +16,13 @@ const TMDB_API_KEY = window.CineMaxConfig ? window.CineMaxConfig.tmdb.apiKey : "
 // Initialize Firebase safely
 let app, db, rtdb;
 try {
-    if (firebaseConfig.apiKey !== "MISSING_KEY" && firebaseConfig.databaseURL !== "MISSING") {
+    if (firebaseConfig.apiKey !== "MISSING") {
         app = firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
         rtdb = firebase.database();
-    } else {
-        console.error("Firebase no configurado. Las llaves faltan en firebase-config.js");
     }
 } catch (error) {
-    console.error("Error inicializando Firebase:", error);
+    console.error("Firebase Initialization Error:", error);
 }
 
 // Security & Stealth Mode: Disable console output and protect source code
@@ -56,14 +55,16 @@ try {
     }, 5000);
 })();
 
-// Enable Firestore Offline Persistence for smoother experience
-db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
-    if (err.code == 'failed-precondition') {
-        console.warn('Persistencia fallida: Múltiples pestañas abiertas');
-    } else if (err.code == 'unimplemented') {
-        console.warn('Persistencia no soportada por el navegador');
-    }
-});
+// Enable Firestore Offline Persistence
+if (db) {
+    db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
+        if (err.code == 'failed-precondition') {
+            console.warn('Persistencia fallida: Múltiples pestañas abiertas');
+        } else if (err.code == 'unimplemented') {
+            console.warn('Persistencia no soportada por el navegador');
+        }
+    });
+}
 
 // DOM Elements
 const trendingMovies = document.getElementById('trendingMovies');
@@ -491,6 +492,20 @@ function setupLiveIndicator() {
 // Load movies from Firebase with Real-time synchronization
 function loadMoviesFromFirebase() {
     return new Promise((resolve, reject) => {
+        if (!db || !rtdb) {
+            console.warn('Firebase no inicializado. Se usará solo la carga desde caché si existe.');
+            const cacheData = localStorage.getItem('cineMaxDataCache');
+            if (cacheData) {
+                try {
+                    const parsed = JSON.parse(cacheData);
+                    moviesList = parsed.moviesList || [];
+                    seriesListRtdb = parsed.seriesListRtdb || [];
+                    seriesListFirestore = parsed.seriesListFirestore || [];
+                    mergeAndDisplayContent();
+                } catch(e) {}
+            }
+            return resolve(); // Resolvemos para no bloquear el arranque de la app
+        }
         console.log('Iniciando sincronización en tiempo real...');
 
         // 1. Cargar desde caché inmediatamente para respuesta instantánea
