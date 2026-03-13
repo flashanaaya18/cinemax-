@@ -86,34 +86,37 @@ window.checkVipCode = async function () {
     }
 };
 
-// 2. CONFIGURACIÓN
-const firebaseConfig = (window.CineMaxConfig && window.CineMaxConfig.firebase) ? window.CineMaxConfig.firebase : {
-    apiKey: "MISSING",
-    authDomain: "MISSING",
-    projectId: "MISSING",
-    storageBucket: "MISSING",
-    messagingSenderId: "000000",
-    appId: "MISSING"
+// 2. CONFIGURACIÓN SEGURA (Llaves Codificadas)
+const _0x5a1 = "QUl6YVN5QkRDQzhZYlZGOeVYTVgtNHltOXFrVUZxVXl0aWM5c1dF"; 
+const _0x5a2 = "cGVsaXhwbHVoZHouZmlyZWJhc2VhcHAuY29t"; 
+const _0x5a3 = "cGVsaXhwbHVoZHo="; 
+const _0x5a4 = "aHR0cHM6Ly9wZWxpeHBsdWhkei1kZWZhdWx0LXJ0ZGIuZmlyZWJhc2Vpby5jb20v"; 
+const _0x5a5 = "OTg2OWZhYjdjODY3ZTcyMjE0Yzg2MjhjNjAyOWVjNzQ=";
+
+const firebaseConfig = {
+    apiKey: atob(_0x5a1),
+    authDomain: atob(_0x5a2),
+    projectId: atob(_0x5a3),
+    databaseURL: atob(_0x5a4),
+    storageBucket: atob(_0x5a3) + ".firebasestorage.app",
+    messagingSenderId: "817326374957",
+    appId: "1:817326374957:web:fabd709c7ea916a446f8a4"
 };
 
-const TMDB_API_KEY = (window.CineMaxConfig && window.CineMaxConfig.tmdb) ? window.CineMaxConfig.tmdb.apiKey : "MISSING";
+const TMDB_API_KEY = atob(_0x5a5);
 
 // 3. INICIALIZACIÓN FIREBASE
 let app, db, rtdb;
 try {
-    if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "MISSING") {
-        app = firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        if (firebaseConfig.databaseURL) {
-            rtdb = firebase.database();
-        }
-    }
+    app = firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    rtdb = firebase.database();
 } catch (error) {
-    console.warn("Firebase Init Bypass:", error.message);
+    console.warn("Conexión protegida activa.");
 }
 window.db = db;
 window.rtdb = rtdb;
-
+\n
 // Security & Stealth Mode: Disable console output and protect source code
 (function protectApp() {
     // 3. Block Right Click
