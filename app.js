@@ -1,29 +1,118 @@
-// Firebase Configuration (Loaded from firebase-config.js)
-// If you are seeing errors, make sure firebase-config.js exists and has valid keys.
+// 1. DEFINIR FUNCIONES GLOBALES PRIMERO (Evita ReferenceError si algo falla abajo)
+
+// Funciones de Acceso y UI
+window.checkAccess = function () {
+    const accessType = localStorage.getItem('userAccessType');
+    const modal = document.getElementById('accessModal');
+    if (!accessType) {
+        if (modal) { modal.style.display = 'flex'; modal.classList.add('active'); }
+        return false;
+    } else {
+        if (modal) { modal.style.display = 'none'; modal.classList.remove('active'); }
+        return true;
+    }
+};
+
+window.updateUIForAccessType = function () {
+    const accessType = localStorage.getItem('userAccessType');
+    const vipBtn = document.getElementById('vipUpgradeBtn');
+    const navSeriesLinks = document.querySelectorAll('a[href="series.html"]');
+    const seriesSection = document.getElementById('series');
+    if (accessType === 'free') {
+        if (vipBtn) { vipBtn.style.display = 'flex'; vipBtn.style.alignItems = 'center'; vipBtn.style.gap = '5px'; }
+        navSeriesLinks.forEach(link => { link.style.display = 'inline-block'; link.onclick = null; });
+        if (seriesSection) seriesSection.style.display = 'block';
+    } else {
+        if (vipBtn) vipBtn.style.display = 'none';
+        navSeriesLinks.forEach(link => { link.style.display = 'inline-block'; });
+        if (seriesSection) seriesSection.style.display = 'block';
+    }
+};
+
+window.selectFreeAccess = function () {
+    localStorage.setItem('userAccessType', 'free');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userId');
+    const modal = document.getElementById('accessModal');
+    if (modal) { modal.classList.remove('active'); modal.style.display = 'none'; }
+    if (window.showMessage) showMessage('Bienvenido al modo Gratuito', 'success');
+    updateUIForAccessType();
+    if (window.loadMoviesFromFirebase) loadMoviesFromFirebase().then(() => { if (window.setupTVNavigation) setupTVNavigation(); });
+};
+
+window.checkVipCode = async function () {
+    const userInput = document.getElementById('vipUserInput');
+    const errorMsg = document.getElementById('vipError');
+    const btn = document.getElementById('vipSubmitBtn');
+    if (!userInput || !btn) return;
+    const user = userInput.value.trim();
+    if (!user) { if (errorMsg) { errorMsg.style.display = 'block'; errorMsg.textContent = 'Ingresa tu nombre o código'; } return; }
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btn.disabled = true;
+    if (errorMsg) errorMsg.style.display = 'none';
+    try {
+        if (!window.db) throw new Error("Firebase no conectado. Revisa tu local firebase-config.js");
+        const codeSnapshot = await window.db.collection('codigos').where('codigo', '==', user).get();
+        const adminNames = ['admin', 'anaya', 'pelix', '23BY206'];
+        if (!codeSnapshot.empty || adminNames.includes(user.toLowerCase())) {
+            let userName = user;
+            let userId = 'vip_' + Date.now();
+            if (!codeSnapshot.empty) {
+                const doc = codeSnapshot.docs[0].data();
+                if (doc.activo === false) { errorMsg.style.display = 'block'; errorMsg.textContent = 'Este código VIP está desactivado.'; return; }
+                userName = doc.nombre || user;
+                userId = doc.codigo || user;
+                localStorage.setItem('vipInicio', doc.inicio || 'No disponible');
+                localStorage.setItem('vipTermina', doc.termina || 'No disponible');
+            }
+            localStorage.setItem('userAccessType', 'vip');
+            localStorage.setItem('userName', userName);
+            localStorage.setItem('userId', userId);
+            document.getElementById('accessModal').classList.remove('active');
+            document.getElementById('accessModal').style.display = 'none';
+            if (window.showMessage) showMessage(`¡Acceso VIP Concedido, ${userName}!`, 'success');
+            updateUIForAccessType();
+            if (window.loadMoviesFromFirebase) loadMoviesFromFirebase().then(() => { if (window.setupTVNavigation) setupTVNavigation(); });
+        } else {
+            if (errorMsg) { errorMsg.style.display = 'block'; errorMsg.textContent = 'Código VIP no encontrado o inválido.'; }
+        }
+    } catch (error) {
+        console.error("Error verificando VIP:", error);
+        if (errorMsg) { errorMsg.style.display = 'block'; errorMsg.textContent = 'Error: ' + error.message; }
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+};
+
+// 2. CONFIGURACIÓN
 const firebaseConfig = (window.CineMaxConfig && window.CineMaxConfig.firebase) ? window.CineMaxConfig.firebase : {
     apiKey: "MISSING",
     authDomain: "MISSING",
     projectId: "MISSING",
-    databaseURL: "https://missing-config.firebaseio.com", // Prevents fatal parse error
     storageBucket: "MISSING",
     messagingSenderId: "000000",
     appId: "MISSING"
 };
 
-// TMDB Configuration
-const TMDB_API_KEY = window.CineMaxConfig ? window.CineMaxConfig.tmdb.apiKey : "MISSING_TMDB_KEY";
+const TMDB_API_KEY = (window.CineMaxConfig && window.CineMaxConfig.tmdb) ? window.CineMaxConfig.tmdb.apiKey : "MISSING";
 
-// Initialize Firebase safely
+// 3. INICIALIZACIÓN FIREBASE
 let app, db, rtdb;
 try {
-    if (firebaseConfig.apiKey !== "MISSING") {
+    if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "MISSING") {
         app = firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
-        rtdb = firebase.database();
+        if (firebaseConfig.databaseURL) {
+            rtdb = firebase.database();
+        }
     }
 } catch (error) {
-    console.error("Firebase Initialization Error:", error);
+    console.warn("Firebase Init Bypass:", error.message);
 }
+window.db = db;
+window.rtdb = rtdb;
 
 // Security & Stealth Mode: Disable console output and protect source code
 (function protectApp() {
@@ -48,11 +137,6 @@ try {
 
     // 3. Block Right Click
     document.addEventListener('contextmenu', (e) => e.preventDefault());
-
-    // 4. Clear console periodically
-    setInterval(() => {
-        console.clear();
-    }, 5000);
 })();
 
 // Enable Firestore Offline Persistence
@@ -134,168 +218,6 @@ async function initApp() {
         showMessage('Error al cargar la plataforma', 'error');
     }
 }
-
-// Funciones de Acceso (Login Pro)
-window.checkAccess = function () {
-    const accessType = localStorage.getItem('userAccessType');
-    const modal = document.getElementById('accessModal');
-    
-    if (!accessType) {
-        if (modal) {
-            modal.style.display = 'flex';
-            modal.classList.add('active');
-        }
-        // No cargar contenido hasta que se elija acceso
-        return false;
-    } else {
-        if (modal) {
-            modal.style.display = 'none';
-            modal.classList.remove('active');
-        }
-        return true;
-    }
-};
-
-window.updateUIForAccessType = function () {
-    const accessType = localStorage.getItem('userAccessType');
-    const vipBtn = document.getElementById('vipUpgradeBtn');
-
-    // Seleccionar elementos de series
-    const navSeriesLinks = document.querySelectorAll('a[href="series.html"]');
-    const seriesSection = document.getElementById('series');
-    const mainSeriesContent = document.getElementById('mainSeriesContent');
-
-    if (accessType === 'free') {
-        if (vipBtn) {
-            vipBtn.style.display = 'flex';
-            vipBtn.style.alignItems = 'center';
-            vipBtn.style.gap = '5px';
-        }
-
-        // Mostrar elementos de series normalmente
-        navSeriesLinks.forEach(link => {
-            link.style.display = 'inline-block';
-            link.onclick = null;
-        });
-
-        if (seriesSection) {
-            seriesSection.style.display = 'block';
-        }
-    } else {
-        if (vipBtn) {
-            vipBtn.style.display = 'none';
-        }
-
-        // Mostrar elementos de series para VIP
-        navSeriesLinks.forEach(link => {
-            if (link.className !== 'active' && !link.style.color) {
-                link.style.display = 'inline-block';
-            } else {
-                link.style.display = 'inline-block';
-            }
-        });
-
-        if (seriesSection) {
-            seriesSection.style.display = 'block';
-        }
-    }
-};
-
-window.selectFreeAccess = function () {
-    // REGLA: No guardamos NADA del usuario en modo free
-    localStorage.setItem('userAccessType', 'free');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userId');
-    
-    const modal = document.getElementById('accessModal');
-    if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-    }
-    
-    showMessage('Bienvenido al modo Gratuito', 'success');
-    updateUIForAccessType();
-    
-    // Cargar contenido ahora que tiene acceso
-    loadMoviesFromFirebase().then(() => {
-        setupTVNavigation();
-    });
-};
-
-window.checkVipCode = async function () {
-    const userInput = document.getElementById('vipUserInput');
-    const errorMsg = document.getElementById('vipError');
-    const btn = document.getElementById('vipSubmitBtn');
-    const user = userInput.value.trim();
-
-    if (!user) {
-        errorMsg.style.display = 'block';
-        errorMsg.textContent = 'Ingresa tu nombre o código';
-        return;
-    }
-
-    // Estado de carga
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    btn.disabled = true;
-    errorMsg.style.display = 'none';
-
-    try {
-        // Consultar SOLO la colección 'codigos' como solicitó el usuario
-        // Usamos .get() que es una petición única (No Listen / Real-time)
-        const codeSnapshot = await db.collection('codigos')
-            .where('codigo', '==', user)
-            .get();
-
-        const adminNames = ['admin', 'anaya', 'pelix', '23BY206'];
-
-        if (!codeSnapshot.empty || adminNames.includes(user.toLowerCase())) {
-            let userName = user;
-            let userId = 'vip_' + Date.now();
-
-            if (!codeSnapshot.empty) {
-                const doc = codeSnapshot.docs[0].data();
-                // Verificar si el campo 'activo' existe y es true
-                if (doc.activo === false) {
-                    errorMsg.style.display = 'block';
-                    errorMsg.textContent = 'Este código VIP está desactivado.';
-                    return;
-                }
-                userName = doc.nombre || user;
-                userId = doc.codigo || user; // Usar el código mismo como ID para vincular historial
-
-                // Guardar fechas de inicio y termina para el perfil
-                localStorage.setItem('vipInicio', doc.inicio || 'No disponible');
-                localStorage.setItem('vipTermina', doc.termina || 'No disponible');
-            }
-            
-            localStorage.setItem('userAccessType', 'vip');
-            localStorage.setItem('userName', userName);
-            localStorage.setItem('userId', userId);
-            
-            document.getElementById('accessModal').classList.remove('active');
-            document.getElementById('accessModal').style.display = 'none';
-            
-            showMessage(`¡Acceso VIP Concedido, ${userName}!`, 'success');
-            updateUIForAccessType();
-            
-            // Recargar datos para mostrar contenido VIP
-            loadMoviesFromFirebase().then(() => {
-                setupTVNavigation();
-            });
-        } else {
-            errorMsg.style.display = 'block';
-            errorMsg.textContent = 'Código VIP no encontrado o inválido.';
-        }
-    } catch (error) {
-        console.error("Error verificando VIP:", error);
-        errorMsg.style.display = 'block';
-        errorMsg.textContent = 'Error de conexión con Firebase. Revisa tu internet.';
-    } finally {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }
-};
 
 // Smart TV Navigation Helper
 function setupTVNavigation() {
