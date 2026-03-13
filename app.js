@@ -12,10 +12,19 @@ const firebaseConfig = window.CineMaxConfig ? window.CineMaxConfig.firebase : {
 // TMDB Configuration
 const TMDB_API_KEY = window.CineMaxConfig ? window.CineMaxConfig.tmdb.apiKey : "MISSING_TMDB_KEY";
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const rtdb = firebase.database();
+// Initialize Firebase safely
+let app, db, rtdb;
+try {
+    if (firebaseConfig.apiKey !== "MISSING_KEY" && firebaseConfig.databaseURL !== "MISSING") {
+        app = firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        rtdb = firebase.database();
+    } else {
+        console.error("Firebase no configurado. Las llaves faltan en firebase-config.js");
+    }
+} catch (error) {
+    console.error("Error inicializando Firebase:", error);
+}
 
 // Security & Stealth Mode: Disable console output and protect source code
 (function protectApp() {
