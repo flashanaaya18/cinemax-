@@ -1,16 +1,16 @@
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyBDCC8YbVF9eF5h-4ym9qkUFqUytic9sWE",
-    authDomain: "pelixpluhdz.firebaseapp.com",
-    projectId: "pelixpluhdz",
-    databaseURL: "https://pelixpluhdz-default-rtdb.firebaseio.com/",
-    storageBucket: "pelixpluhdz.firebasestorage.app",
-    messagingSenderId: "817326374957",
-    appId: "1:817326374957:web:fabd709c7ea916a446f8a4"
+// Firebase Configuration (Loaded from firebase-config.js)
+const firebaseConfig = window.CineMaxConfig ? window.CineMaxConfig.firebase : {
+    apiKey: "MISSING_KEY",
+    authDomain: "MISSING",
+    projectId: "MISSING",
+    databaseURL: "MISSING",
+    storageBucket: "MISSING",
+    messagingSenderId: "000000",
+    appId: "MISSING"
 };
 
 // TMDB Configuration
-const TMDB_API_KEY = "9869fab7c867e72214c8628c6029ec74";
+const TMDB_API_KEY = window.CineMaxConfig ? window.CineMaxConfig.tmdb.apiKey : "MISSING_TMDB_KEY";
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);

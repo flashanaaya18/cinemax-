@@ -16,9 +16,19 @@ import sys
 import time
 import threading
 
+# Cargar configuración desde secrets.json
+def load_secrets():
+    try:
+        with open('secrets.json', 'r') as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+secrets = load_secrets()
+
 # Configuración de TMDB
-TMDB_API_KEY = "9869fab7c867e72214c8628c6029ec74"
-TMDB_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ODY5ZmFiN2M4NjdlNzIyMTRjODYyOGM2MDI5ZWM3NCIsIm5iZiI6MTc1OTI2NzMzMi43MDg5OTk5LCJzdWIiOiI2OGRjNGEwNDE1NWQwOWZjZGQyZGY0MTMiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0._sxkF_bWFZtZOQU_8GcEa4x7TawgM_CB9zA43VzSiAY"
+TMDB_API_KEY = secrets.get("tmdb_api_key", "YOUR_TMDB_API_KEY")
+TMDB_ACCESS_TOKEN = secrets.get("tmdb_access_token", "YOUR_TMDB_TOKEN")
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
 TMDB_IMAGE_URL = "https://image.tmdb.org/t/p/original"
 
@@ -29,8 +39,8 @@ TMDB_HEADERS = {
 }
 
 # Configuración de Telegram
-TELEGRAM_TOKEN = "8558038434:AAGZh740g6MjGmj1h2qAebB-Hij6DexPI0s"
-CHAT_ID = "-1003658869096" # ID actualizado del grupo cinemax+
+TELEGRAM_TOKEN = secrets.get("telegram_token", "YOUR_BOT_TOKEN")
+CHAT_ID = secrets.get("chat_id", "YOUR_CHAT_ID")
 
 def notificar_telegram(contenido, tipo="película"):
     """Envía una notificación al grupo de Telegram con detalles visuales premium"""

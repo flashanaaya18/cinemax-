@@ -244,6 +244,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script src="app.js"></script>
 
     <script>
@@ -500,8 +501,8 @@
         }
 
         // --- LÓGICA DE REPORTES TELEGRAM ---
-        const BOT_TOKEN = "8558038434:AAGZh740g6MjGmj1h2qAebB-Hij6DexPI0s";
-        const CHAT_ID_PEDIDOS = "-5191457076"; // Grupo Pedidos
+        const BOT_TOKEN = window.CineMaxConfig ? window.CineMaxConfig.telegram.botToken : "";
+        const CHAT_ID_PEDIDOS = window.CineMaxConfig ? window.CineMaxConfig.telegram.chatIdPedidos : "";
 
         async function reportToBot() {
             if (!currentMovie || !selectedSource) return;

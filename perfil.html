@@ -338,7 +338,8 @@
         </div>
     </footer>
 
-    <!-- Core Scripts (No Firebase) -->
+    <!-- Core Scripts -->
+    <script src="firebase-config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const userName = localStorage.getItem('userName') || 'Invitado';
@@ -468,9 +469,9 @@
         };
 
         // --- LÓGICA DE SOLICITUDES TMDB (TMDB API, NO FIREBASE) ---
-        const TMDB_API_KEY = "9869fab7c867e72214c8628c6029ec74";
-        const BOT_TOKEN = "8558038434:AAGZh740g6MjGmj1h2qAebB-Hij6DexPI0s";
-        const CHAT_ID_PEDIDOS = "-5191457076";
+        const TMDB_API_KEY = window.CineMaxConfig ? window.CineMaxConfig.tmdb.apiKey : "";
+        const BOT_TOKEN = window.CineMaxConfig ? window.CineMaxConfig.telegram.botToken : "";
+        const CHAT_ID_PEDIDOS = window.CineMaxConfig ? window.CineMaxConfig.telegram.chatIdPedidos : "";
 
         async function searchTMDB() {
             const query = document.getElementById('tmdbSearchInput').value.trim();

@@ -6,6 +6,11 @@ node_modules/
 
 # Sensitive data
 serviceAccountKey.json
+firebase-config.js
+secrets.json
+.env
+*.env
+auth.js
 
 # Large files
 *.apk
@@ -13,6 +18,10 @@ serviceAccountKey.json
 *.mp4
 *.png
 !Icon-192.png
+!hero-bg.png
+!cinema+1.png
+!cinema+2.png
+!cinema+3.png
 
 # Local databases
 database.json

@@ -2,13 +2,27 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 import requests
 import time
+import json
+import os
 from datetime import datetime
 
-# Configuración de Telegram
-TELEGRAM_TOKEN = "8558038434:AAGZh740g6MjGmj1h2qAebB-Hij6DexPI0s"
-CHAT_ID = "-1003658869096"
+# Cargar configuración desde secrets.json
+def load_secrets():
+    try:
+        with open('secrets.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+secrets = load_secrets()
+TELEGRAM_TOKEN = secrets.get("telegram_token", "YOUR_BOT_TOKEN")
+CHAT_ID = secrets.get("chat_id", "YOUR_CHAT_ID")
 
 # Inicializar Firebase
+if not os.path.exists('serviceAccountKey.json'):
+    print("❌ Error: 'serviceAccountKey.json' no encontrado. Por favor agrégalo.")
+    exit(1)
+
 cred = credentials.Certificate('serviceAccountKey.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
