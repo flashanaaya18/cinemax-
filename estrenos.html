@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrenos - CineMax+ Premium</title>
+    
+    <link rel="icon" type="image/png" href="Icon-192.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .page-header {
+            padding-top: 140px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        .page-subtitle {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+        main { min-height: 80vh; }
+    </style>
+</head>
+
+<body>
+    <!-- Premium Header -->
+    <header id="mainHeader">
+        <div class="container header-container">
+            <a href="index.html" class="logo">Cine<span>Max+</span></a>
+
+            <nav class="nav-links" id="navLinks">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="series.html">Series</a></li>
+                    <li><a href="categorias.html">Categorías</a></li>
+                    <li><a href="estrenos.html" class="active">Estrenos</a></li>
+                    <li><a href="tendencias.html">Tendencias</a></li>
+                    <li><a href="descargar.html">App</a></li>
+                </ul>
+                <a href="perfil.html" id="profileLink" style="color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user-circle"></i> Perfil
+                </a>
+            </nav>
+
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Buscar estrenos..." id="searchInput">
+                <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section id="searchResults" style="display: none; padding-top: 120px;">
+                <div class="section-header">
+                    <h2 class="section-title">Resultados</h2>
+                    <button class="btn btn-small btn-outline" onclick="window.location.reload()">Cerrar</button>
+                </div>
+                <div class="movies-grid" id="searchResultsMovies"></div>
+            </section>
+
+            <div id="mainEstrenosContent">
+                <div class="page-header">
+                    <h1 class="page-title">Últimos Estrenos</h1>
+                    <p class="page-subtitle">Lo más nuevo del cine recién llegado para ti</p>
+                </div>
+
+                <div class="movies-grid" id="estrenosGrid">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Premium Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <a href="#" class="logo">Cine<span>Max+</span></a>
+                    <p>Estrenos exclusivos en la mejor calidad.</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 CineMax+ Premium. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase & App JS -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (typeof renderEstrenosPage === 'function') renderEstrenosPage();
+            }, 1000);
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) document.getElementById('mainHeader').classList.add('scrolled');
+            else document.getElementById('mainHeader').classList.remove('scrolled');
+        });
+
+        // Telegram Notification Logic
+        function closeTgNotif() {
+            document.getElementById('tgNotif').classList.remove('show');
+            localStorage.setItem('tgNotifClosed', 'true');
+        }
+
+        setTimeout(() => {
+            if (!localStorage.getItem('tgNotifClosed')) {
+                document.getElementById('tgNotif').classList.add('show');
+            }
+        }, 5000); // Show after 5 seconds
+    </script>
+
+    <!-- Telegram Notification Popup -->
+    <div class="telegram-notif" id="tgNotif">
+        <button class="tg-close" onclick="closeTgNotif()" id="tgCloseBtn" tabindex="0" aria-label="Cerrar">&times;</button>
+        <div class="tg-icon-wrapper">
+            <i class="fab fa-telegram-plane"></i>
+        </div>
+        <div class="tg-content">
+            <span class="tg-title">¡Únete al Grupo!</span>
+            <p class="tg-text">Pide tu película o serie favorita y entérate de todo lo nuevo que subimos al instante.</p>
+            <a href="https://t.me/+E7lcEA9LbBgyZmI5" target="_blank" class="tg-btn" id="tgJoinBtn" onclick="closeTgNotif()" tabindex="0">Unirme Ahora</a>
+        </div>
+    </div>
+
+
+    <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></button>
+</body>
+</html>

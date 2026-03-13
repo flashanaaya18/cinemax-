@@ -1,0 +1,18 @@
+# Local Netlify folder
+.netlify
+
+# Dependencies
+node_modules/
+
+# Sensitive data
+serviceAccountKey.json
+
+# Large files
+*.apk
+*.zip
+*.mp4
+*.png
+!Icon-192.png
+
+# Local databases
+database.json

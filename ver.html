@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMax+ Premium</title>
+    <link rel="icon" type="image/png" href="Icon-192.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Video.js Core -->
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
+    <style>
+        /* Rediseño Estilo Netflix con Colores Originales (Oro) */
+        .seasons-section { margin-top: 5rem; padding-top: 4rem; border-top: 1px solid rgba(255,255,255,0.1); }
+        
+        .seasons-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 2.5rem; 
+        }
+
+        .season-selector { 
+            display: flex; 
+            gap: 1.5rem; 
+            overflow-x: auto; 
+            scrollbar-width: none;
+            padding-bottom: 0.5rem;
+        }
+        .season-selector::-webkit-scrollbar { display: none; }
+
+        .season-btn { 
+            background: none;
+            border: none;
+            padding: 0;
+            color: #808080;
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            font-family: 'Outfit', sans-serif;
+        }
+        .season-btn.active { color: var(--primary); }
+        .season-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary); /* Dorado Original */
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+        .season-btn:hover { color: #fff; }
+
+        .episodes-list { 
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .episode-row { 
+            display: grid;
+            grid-template-columns: 60px 220px 1fr;
+            align-items: center;
+            padding: 2.5rem 2rem;
+            background: var(--bg-dark);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .episode-row:hover { background: rgba(255, 215, 0, 0.05); }
+        .episode-row:last-child { border-bottom: none; }
+
+        .episode-number {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--text-dim);
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .episode-img-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #000;
+        }
+        .episode-img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s; }
+        .episode-row:hover .episode-img { filter: brightness(0.6) scale(1.05); }
+        
+        .play-icon-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+            opacity: 0;
+            transition: 0.3s;
+            background: rgba(0,0,0,0.4);
+        }
+        .episode-row:hover .play-icon-overlay { opacity: 1; }
+
+        .episode-body { padding-left: 2.5rem; }
+        .episode-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .episode-title-row h4 { 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+        }
+        .episode-row:hover h4 { color: var(--primary); }
+
+        .episode-synopsis { 
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            max-width: 95%;
+        }
+
+        @media (max-width: 768px) {
+            .episode-row { grid-template-columns: 40px 140px 1fr; padding: 1.5rem 1rem; }
+            .episode-img-box { aspect-ratio: 16/9; }
+            .episode-synopsis { -webkit-line-clamp: 2; line-clamp: 2; font-size: 0.85rem; }
+            .episode-number { font-size: 1.4rem; }
+            .episode-body { padding-left: 1.2rem; }
+        }
+
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--primary-glow); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 5rem auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Estilo Video.js Premium CineMax+ */
+        .video-js { width: 100%; height: 100%; border-radius: 12px; overflow: hidden; }
+        .vjs-big-play-button { background-color: var(--primary) !important; color: #000 !important; border-radius: 50% !important; border: none !important; width: 65px !important; height: 65px !important; line-height: 65px !important; box-shadow: 0 0 20px var(--primary-glow) !important; }
+        .player-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 16px; overflow: hidden; border: 1px solid var(--glass-border); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+    </style>
+</head>
+
+<body class="player-page">
+    <header id="mainHeader">
+        <div class="container header-container">
+            <button class="btn btn-small btn-outline" onclick="history.back()">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+            <a href="index.html" class="logo">Cine<span>Max+</span></a>
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="series.html">Series</a></li>
+                    <li><a href="categorias.html">Categorías</a></li>
+                    <li><a href="perfil.html" style="color: var(--text-main);"><i class="fas fa-user-circle"></i> Mi Perfil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="player-container">
+        <div class="container" id="main-player-content">
+            <!-- Hero Section -->
+            <div id="movie-hero" class="player-hero">
+                <div class="player-poster-container">
+                    <img id="movie-poster" src="" alt="Poster">
+                </div>
+                <div class="player-info">
+                    <h1 id="movie-title">Cargando...</h1>
+                    <div id="movie-meta" class="player-meta" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;"></div>
+                    <p id="movie-description" class="player-description" style="color: var(--text-dim); line-height: 1.8; margin-bottom: 2.5rem; max-width: 800px;"></p>
+                    
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <button id="play-main-btn" class="btn btn-large btn-primary">
+                            <i class="fas fa-play"></i> REPRODUCIR AHORA
+                        </button>
+                        <button id="fav-detail-btn" class="btn btn-large btn-outline" style="min-width: 60px;">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Idiomas Disponibles -->
+            <section id="languages-section" class="hidden" style="margin-top: 4rem;">
+                <h3 class="section-title"><i class="fas fa-language"></i> Idiomas Disponibles</h3>
+                <div id="languages-grid" class="languages-grid"></div>
+            </section>
+
+            <!-- Video Player -->
+            <section id="video-container" class="hidden" style="margin-top: 4rem;">
+                <div class="player-wrapper">
+                    <video id="vjs-player" class="video-js vjs-big-play-centered hidden" controls preload="auto" data-setup='{}'></video>
+                    <iframe id="iframe-video-player" src="" 
+                        allowfullscreen style="width: 100%; height: 100%; border: none;" class="hidden"></iframe>
+                </div>
+                <div class="video-controls" style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center;">
+                    <h4 id="video-display-title" style="color: var(--text-main); font-weight: 700; flex: 1;"></h4>
+                    <div style="display: flex; gap: 0.8rem;">
+                        <button class="btn btn-small btn-outline" style="border-color: #ff4757; color: #ff4757;" onclick="reportToBot()">
+                            <i class="fas fa-exclamation-triangle"></i> ¡No se Ve / Error!
+                        </button>
+                        <button class="btn btn-small btn-outline" onclick="closePlayer()">Cerrar Reproductor</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Temporadas/Episodios -->
+            <section id="seasons-container" class="seasons-section hidden">
+                <div class="seasons-header">
+                    <h3 class="section-title"><i class="fas fa-list-ol"></i> Episodios</h3>
+                    <div id="season-selector" class="season-selector"></div>
+                </div>
+                <div id="episodes-grid" class="episodes-list"></div>
+            </section>
+        </div>
+    </main>
+
+    <footer style="margin-top: 10rem; padding: 6rem 0; border-top: 1px solid hsla(0,0%,100%,0.05); text-align: center; color: var(--text-dim);">
+        <p>&copy; 2024 CineMax+ Premium</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        let currentMovie = null;
+        let currentMovieId = null;
+        let vjsPlayer = null;
+        let selectedSource = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentMovieId = urlParams.get('id');
+            if (!currentMovieId) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const checkFirebase = setInterval(async () => {
+                if (typeof db !== 'undefined') {
+                    clearInterval(checkFirebase);
+                    await loadMovieData(currentMovieId);
+                }
+            }, 100);
+
+            document.getElementById('play-main-btn').addEventListener('click', () => {
+                const section = document.getElementById('languages-section');
+                section.classList.remove('hidden');
+                section.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        async function loadMovieData(movieId) {
+            try {
+                let doc = await db.collection("peliculas").doc(movieId).get();
+                if (doc.exists) {
+                    currentMovie = { ...doc.data(), id: doc.id, tipo: 'pelicula' };
+                } else {
+                    // Intentar cargar desde Firestore Series
+                    let docSerie = await db.collection("series").doc(movieId).get();
+                    if (docSerie.exists) {
+                        currentMovie = { ...docSerie.data(), id: docSerie.id, tipo: 'serie' };
+                    } else {
+                        // Intentar cargar desde RTDB (legacy/fallback)
+                        const snapshot = await rtdb.ref(`series/${movieId}`).once('value');
+                        if (snapshot.exists()) {
+                            currentMovie = { ...snapshot.val(), id: movieId, tipo: 'serie' };
+                        }
+                    }
+                }
+
+                if (currentMovie) {
+                    displayMovie(currentMovie);
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error("Error cargando película:", error);
+            }
+        }
+
+        function displayMovie(movie) {
+            document.title = `${movie.titulo || 'Cargando...'} - CineMax+`;
+            document.getElementById('movie-title').textContent = movie.titulo || 'Sin Título';
+            document.getElementById('movie-description').textContent = movie.sinopsis || movie.sisposesis || 'Sin descripción disponible.';
+            
+            const posterImg = document.getElementById('movie-poster');
+            posterImg.src = movie.poster || movie.portada || 'https://via.placeholder.com/300x450';
+            posterImg.onerror = function() { this.src = 'https://via.placeholder.com/300x450?text=Poster+No+Disponible'; };
+            
+            const metaContainer = document.getElementById('movie-meta');
+            metaContainer.innerHTML = `
+                <span class="meta-pill"><i class="fas fa-star"></i> ${parseFloat(movie.rating || 7).toFixed(1)}</span>
+                <span class="meta-pill">${movie.año || '2024'}</span>
+                <span class="meta-pill"><i class="fas fa-clock"></i> ${movie.duracion || '120'} min</span>
+                <span class="meta-pill"><i class="fas fa-shield-alt"></i> SIN ANUNCIOS</span>
+            `;
+
+            // Setup Favorite Button in Detail
+            const favBtn = document.getElementById('fav-detail-btn');
+            if (favBtn) {
+                const updateFavIcon = () => {
+                    if (typeof isFavorite === 'function' && isFavorite(movie.id)) {
+                        favBtn.innerHTML = '<i class="fas fa-heart"></i>';
+                        favBtn.classList.add('active');
+                        favBtn.style.color = '#ff4757';
+                    } else {
+                        favBtn.innerHTML = '<i class="far fa-heart"></i>';
+                        favBtn.classList.remove('active');
+                        favBtn.style.color = 'var(--primary)';
+                    }
+                };
+                
+                updateFavIcon();
+                
+                favBtn.onclick = () => {
+                    if (typeof toggleFavorite === 'function') {
+                        toggleFavorite(movie);
+                        updateFavIcon();
+                    }
+                };
+            }
+
+            const grid = document.getElementById('languages-grid');
+            grid.innerHTML = '';
+            
+            const fields = [
+                { id: 'latino', name: 'Latino', icon: 'fa-microphone' },
+                { id: 'español', name: 'Español', icon: 'fa-language' },
+                { id: 'subtitulado', name: 'Subtitulado', icon: 'fa-closed-captioning' },
+                { id: 'url', name: 'Principal', icon: 'fa-play' }
+            ];
+
+            let hasLanguages = false;
+            fields.forEach(f => {
+                if (movie[f.id] && movie[f.id].trim() !== '') {
+                    hasLanguages = true;
+                    const card = document.createElement('div');
+                    card.className = 'language-card';
+                    card.innerHTML = `<i class="fas ${f.icon}"></i> <span>${f.name}</span>`;
+                    card.onclick = () => playVideo({ name: f.name, url: movie[f.id].trim() });
+                    grid.appendChild(card);
+                }
+            });
+
+            if (movie.tipo === 'serie') {
+                document.getElementById('play-main-btn').classList.add('hidden');
+                loadSeasons(movie);
+            } else if (!hasLanguages) {
+                document.getElementById('play-main-btn').classList.add('hidden');
+            }
+        }
+
+        function loadSeasons(movie) {
+            const container = document.getElementById('seasons-container');
+            container.classList.remove('hidden');
+            const seasons = movie.temporadas || { "1": { episodios: movie.episodios } };
+            
+            const selector = document.getElementById('season-selector');
+            selector.innerHTML = '';
+            
+            Object.keys(seasons).sort((a,b) => parseInt(a)-parseInt(b)).forEach((num, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `season-btn ${idx === 0 ? 'active' : ''}`;
+                btn.textContent = `Temporada ${num}`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderEpisodes(seasons[num].episodios, num);
+                };
+                selector.appendChild(btn);
+            });
+
+            if (Object.keys(seasons).length > 0) {
+                renderEpisodes(seasons[Object.keys(seasons)[0]].episodios, Object.keys(seasons)[0]);
+            }
+        }
+
+        async function renderEpisodes(episodes, seasonNum) {
+            const grid = document.getElementById('episodes-grid');
+            grid.innerHTML = '<div class="spinner"></div>';
+            
+            let tmdbEpisodes = [];
+            // Si tenemos ID de TMDB, intentamos obtener las imágenes reales de los capítulos
+            if (currentMovie.tmdb_id) {
+                try {
+                    const response = await fetch(`https://api.themoviedb.org/3/tv/${currentMovie.tmdb_id}/season/${seasonNum}?api_key=${TMDB_API_KEY}&language=es-ES`);
+                    if (response.ok) {
+                        const data = await response.ok ? await response.json() : null;
+                        if (data && data.episodes) {
+                            tmdbEpisodes = data.episodes;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error obteniendo imágenes de TMDB:", e);
+                }
+            }
+
+            grid.innerHTML = '';
+            if (!episodes) return;
+
+            const sortedKeys = Object.keys(episodes).sort((a,b) => {
+                const numA = parseInt(a.replace(/\D/g, '')) || 0;
+                const numB = parseInt(b.replace(/\D/g, '')) || 0;
+                return numA - numB;
+            });
+
+            sortedKeys.forEach(key => {
+                const ep = episodes[key];
+                const url = typeof ep === 'string' ? ep : ep.url;
+                const epNum = parseInt(key.replace(/\D/g,''));
+                
+                // Buscar coincidencia en los datos de TMDB para la imagen y sinopsis real
+                const tmdbEp = tmdbEpisodes.find(te => te.episode_number === epNum);
+                
+                const imgUrl = tmdbEp && tmdbEp.still_path 
+                    ? `https://image.tmdb.org/t/p/w500${tmdbEp.still_path}` 
+                    : (ep.imagen || currentMovie.poster || currentMovie.portada || 'https://via.placeholder.com/300x169?text=Episodio');
+                
+                const tituloEp = tmdbEp && tmdbEp.name ? tmdbEp.name : (ep.titulo || key);
+                const sinopsisEp = tmdbEp && tmdbEp.overview ? tmdbEp.overview : (ep.sinopsis || ep.overview || 'Sin descripción disponible.');
+
+                const row = document.createElement('div');
+                row.className = 'episode-row';
+                row.innerHTML = `
+                    <div class="episode-number">${epNum}</div>
+                    <div class="episode-img-box">
+                        <img src="${imgUrl}" class="episode-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x160?text=CineMax+'">
+                        <div class="play-icon-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="episode-body">
+                        <div class="episode-title-row">
+                            <h4>${tituloEp}</h4>
+                        </div>
+                        <p class="episode-synopsis">${sinopsisEp}</p>
+                    </div>
+                `;
+                row.onclick = () => playVideo({ name: key, url: url });
+                grid.appendChild(row);
+            });
+        }
+
+        async function playVideo(source) {
+            selectedSource = source;
+            document.getElementById('video-container').classList.remove('hidden');
+            document.getElementById('video-display-title').textContent = `${currentMovie.titulo} - ${source.name}`;
+            document.getElementById('video-container').scrollIntoView({ behavior: 'smooth' });
+            
+            const vjsEl = document.getElementById('vjs-player');
+            const iframe = document.getElementById('iframe-video-player');
+            const url = source.url;
+            const isDirect = url.includes('.mp4') || url.includes('.m3u8') || url.includes('.webm') || url.includes('storage.googleapis');
+
+            if (isDirect) {
+                iframe.classList.add('hidden');
+                vjsEl.classList.remove('hidden');
+                if (!vjsPlayer) {
+                    vjsPlayer = videojs('vjs-player');
+                }
+                vjsPlayer.src({ src: url, type: url.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4' });
+                vjsPlayer.play();
+            } else {
+                vjsEl.classList.add('hidden');
+                if (vjsPlayer) vjsPlayer.pause();
+                iframe.classList.remove('hidden');
+                iframe.src = url;
+            }
+        }
+
+        function closePlayer() {
+            document.getElementById('video-container').classList.add('hidden');
+            document.getElementById('iframe-video-player').src = '';
+            if (vjsPlayer) vjsPlayer.pause();
+        }
+
+        // --- LÓGICA DE REPORTES TELEGRAM ---
+        const BOT_TOKEN = "8558038434:AAGZh740g6MjGmj1h2qAebB-Hij6DexPI0s";
+        const CHAT_ID_PEDIDOS = "-5191457076"; // Grupo Pedidos
+
+        async function reportToBot() {
+            if (!currentMovie || !selectedSource) return;
+
+            const userName = localStorage.getItem('userName') || 'Usuario Web';
+            const escapedTitle = currentMovie.titulo.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const mensaje = `🚨 <b>REPORTE DE ERROR / CONTENIDO CAÍDO</b> 🚨\n\n` +
+                            `👤 <b>Usuario:</b> ${userName}\n` +
+                            `🎬 <b>Título:</b> ${escapedTitle}\n` +
+                            `🔊 <b>Idioma/Opción:</b> ${selectedSource.name}\n` +
+                            `🔗 <b>ID:</b> ${currentMovieId}\n\n` +
+                            `❌ <i>El usuario indica que este enlace no funciona o dio error.</i>`;
+
+            try {
+                // Notificar al grupo
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID_PEDIDOS,
+                        text: mensaje,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                if (response.ok) {
+                    alert('🚨 Reporte enviado. El administrador revisará el enlace pronto. ¡Gracias!');
+                } else {
+                    const errData = await response.json();
+                    console.error('Telegram Report Error:', errData);
+                    alert('❌ Error Telegram: ' + (errData.description || 'Consulta la consola'));
+                }
+            } catch (e) {
+                console.error('Fetch Error:', e);
+                alert('❌ Error de conexión con el sistema de reportes.');
+            }
+        }
+    </script>
+</body>
+</html>

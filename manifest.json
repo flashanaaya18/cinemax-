@@ -1,0 +1,18 @@
+{
+  "name": "CineMax+",
+  "short_name": "CineMax+",
+  "description": "Premium Streaming Experience for Movies and Series",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0c",
+  "theme_color": "#ffd700",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "Icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

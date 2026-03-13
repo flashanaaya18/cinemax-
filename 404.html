@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Página no encontrada | CineMax+</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .error-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            background: radial-gradient(circle at center, hsla(240, 10%, 15%, 1) 0%, var(--bg-dark) 100%);
+        }
+        .error-code {
+            font-size: 10rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 50px var(--primary-glow);
+            font-family: 'Outfit', sans-serif;
+        }
+        .error-msg {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-code">404</div>
+        <h1 class="error-msg">¡Vaya! Parece que te has perdido en el catálogo.</h1>
+        <p style="color: var(--text-dim); margin-bottom: 3rem;">La página que buscas no existe o ha sido movida.</p>
+        <a href="index.html" class="btn">
+            <i class="fas fa-home"></i> Volver al Inicio
+        </a>
+    </div>
+</body>
+</html>
