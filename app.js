@@ -94,7 +94,7 @@ const _0x5a4 = "aHR0cHM6Ly9wZWxpeHBsdWhkei1kZWZhdWx0LXJ0ZGIuZmlyZWJhc2Vpby5jb20v
 const _0x5a5 = "OTg2OWZhYjdjODY3ZTcyMjE0Yzg2MjhjNjAyOWVjNzQ=";
 
 const firebaseConfig = {
-    apiKey: atob(_0x5a1),
+    apiKey: atob(_0x5a1.replace(/-/g, "+").replace(/_/g, "/")),
     authDomain: atob(_0x5a2),
     projectId: atob(_0x5a3),
     databaseURL: atob(_0x5a4),
@@ -116,7 +116,8 @@ try {
 }
 window.db = db;
 window.rtdb = rtdb;
-\n
+
+
 // Security & Stealth Mode: Disable console output and protect source code
 (function protectApp() {
     // 3. Block Right Click
@@ -1952,11 +1953,17 @@ window.reportCurrentContentToBot = async function(titulo, id, urlExtra = '') {
 
     const userName = localStorage.getItem('userName') || 'Usuario Web';
     const escapedEscapedTitle = titulo.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    const mensaje = `🚨 <b>REPORTE DE ERROR / CONTENIDO</b> 🚨\n\n` +
-                    `👤 <b>Usuario:</b> ${userName}\n` +
-                    `🎬 <b>Título:</b> ${escapedEscapedTitle}\n` +
-                    `🆔 <b>ID:</b> ${id}\n` +
-                    (urlExtra ? `🔗 <b>Enlace:</b> ${urlExtra}\n` : '') +
+    const mensaje = `🚨 <b>REPORTE DE ERROR / CONTENIDO</b> 🚨
+
+` +
+                    `👤 <b>Usuario:</b> ${userName}
+` +
+                    `🎬 <b>Título:</b> ${escapedEscapedTitle}
+` +
+                    `🆔 <b>ID:</b> ${id}
+` +
+                    (urlExtra ? `🔗 <b>Enlace:</b> ${urlExtra}
+` : '') +
                     `❌ <i>El usuario indica que hay un error o el enlace no funciona.</i>`;
 
     try {
