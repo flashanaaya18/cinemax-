@@ -116,25 +116,6 @@ window.rtdb = rtdb;
 
 // Security & Stealth Mode: Disable console output and protect source code
 (function protectApp() {
-    // 1. Suppress all console logs/errors in production to hide technical details
-    const noop = () => {};
-    console.log = noop;
-    console.warn = noop;
-    console.error = noop;
-
-    // 2. Anti-DevTools: Block Common keys
-    document.addEventListener('keydown', (e) => {
-        // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U (View Source)
-        if (
-            e.keyCode === 123 || 
-            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) ||
-            (e.ctrlKey && e.keyCode === 85)
-        ) {
-            e.preventDefault();
-            return false;
-        }
-    });
-
     // 3. Block Right Click
     document.addEventListener('contextmenu', (e) => e.preventDefault());
 })();
@@ -1957,8 +1938,14 @@ window.renderTendenciasPage = function () {
 
 // --- LÓGICA DE REPORTES TELEGRAM ---
 window.reportCurrentContentToBot = async function(titulo, id, urlExtra = '') {
-    const BOT_TOKEN = "8558038434:AAGZh740g6MjGmj1h2qAebB-Hij6DexPI0s";
-    const CHAT_ID_PEDIDOS = "-5191457076"; // Grupo Pedidos
+    const BOT_TOKEN = (window.CineMaxConfig && window.CineMaxConfig.telegram) ? window.CineMaxConfig.telegram.botToken : "MISSING";
+    const CHAT_ID_PEDIDOS = (window.CineMaxConfig && window.CineMaxConfig.telegram) ? window.CineMaxConfig.telegram.chatIdPedidos : "MISSING";
+
+    if (BOT_TOKEN === "MISSING") {
+        console.warn("Telegram bot token no configurado.");
+        alert("Error de configuración de reporte.");
+        return;
+    }
 
     const userName = localStorage.getItem('userName') || 'Usuario Web';
     const escapedEscapedTitle = titulo.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -1992,3 +1979,8 @@ window.reportCurrentContentToBot = async function(titulo, id, urlExtra = '') {
         alert('❌ Error de conexión al enviar el reporte.');
     }
 };
+
+// --- ARRANQUE DE LA APLICACIÓN ---
+document.addEventListener('DOMContentLoaded', () => {
+    initApp();
+});
