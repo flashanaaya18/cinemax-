@@ -1,16 +1,17 @@
-// 1. DEFINIR FUNCIONES GLOBALES PRIMERO (Evita ReferenceError si algo falla abajo)
+// 1. DEFINIR FUNCIONES GLOBALES PRIMERO
+window.fixImageUrl = function(url, size = 'w500') {
+    if (!url || typeof url !== 'string' || url.trim() === '') return 'https://via.placeholder.com/300x450?text=CineMax+';
+    // Si es ruta relativa de TMDB (empieza con /)
+    if (url.startsWith('/')) return `https://image.tmdb.org/t/p/${size}${url}`;
+    // Limpiar dobles barras causadas por concatenar 'w300/' + '/path.jpg' en Firebase
+    url = url.replace(/([^:])(\/\/+)/g, '$1/');
+    if (url.includes('via.placeholder.com')) return url;
+    return url;
+};
 
 // Funciones de Acceso y UI
 window.checkAccess = function () {
-    const accessType = localStorage.getItem('userAccessType');
-    const modal = document.getElementById('accessModal');
-    if (!accessType) {
-        if (modal) { modal.style.display = 'flex'; modal.classList.add('active'); }
-        return false;
-    } else {
-        if (modal) { modal.style.display = 'none'; modal.classList.remove('active'); }
-        return true;
-    }
+    return true;
 };
 
 window.updateUIForAccessType = function () {
@@ -185,19 +186,17 @@ const mainCategories = [
 // Initialize app
 async function initApp() {
     try {
-        const hasAccess = checkAccess(); 
         setupEventListeners();
         setupBackToTop();
         initAdBlocker();
         
-        if (hasAccess) {
-            updateUIForAccessType();
-            loadHeroFromCache();
-            setupLiveIndicator();
-            await loadMoviesFromFirebase();
-            setupTVNavigation();
-            listenersInitialized = true; // Activar notificaciones después de carga inicial
-        }
+        console.log('Cargando datos de la plataforma...');
+        updateUIForAccessType();
+        loadHeroFromCache();
+        setupLiveIndicator();
+        await loadMoviesFromFirebase();
+        setupTVNavigation();
+        listenersInitialized = true;
     } catch (error) {
         console.error('Error inicializando la app:', error);
         showMessage('Error al cargar la plataforma', 'error');
@@ -467,7 +466,7 @@ function loadMoviesFromFirebase() {
                 if (listenersInitialized) {
                     snapshot.docChanges().forEach(change => {
                         if (change.type === "added") {
-                            const newData = change.document.data();
+                            const newData = change.doc.data();
                             showMessage(`📽️ ¡Nuevo: ${newData.titulo}!`, 'success');
                         }
                     });
@@ -541,7 +540,7 @@ function loadMoviesFromFirebase() {
                 if (listenersInitialized) {
                     snapshot.docChanges().forEach(change => {
                         if (change.type === "added") {
-                            const newData = change.document.data();
+                            const newData = change.doc.data();
                             showMessage(`📺 ¡Nueva Serie: ${newData.titulo}!`, 'success');
                         }
                     });
@@ -573,33 +572,44 @@ function loadMoviesFromFirebase() {
 
 // Helpers para procesar datos (Extraídos para limpieza)
 function processMovieDoc(id, data) {
+    // Leer categorías: puede ser campo 'categorias' (array o string) o 'categoria' (singular string)
     let categorias = [];
     if (data.categorias) {
-        categorias = Array.isArray(data.categorias) ? data.categorias : data.categorias.split(',').map(c => c.trim());
+        categorias = Array.isArray(data.categorias)
+            ? data.categorias
+            : data.categorias.split(',').map(c => c.trim());
     } else if (data.categoria) {
-        categorias = [data.categoria];
+        // En Firebase el campo es 'categoria' (singular)
+        categorias = typeof data.categoria === 'string'
+            ? data.categoria.split(',').map(c => c.trim())
+            : Array.isArray(data.categoria) ? data.categoria : [String(data.categoria)];
     }
-    
+    categorias = categorias.filter(c => c && c.trim() !== '');
     categorias.forEach(cat => { if (cat) allGenres.add(cat.trim().toLowerCase()); });
+
+    // Leer la imagen: el campo en Firebase es 'poster' con URL completa
+    const rawPoster = data.poster || data.portada || data.poster_path || data.imagen || '';
+    const rawFondo  = data.fondo || data.backdrop_path || rawPoster;
 
     const movie = {
         id: id,
         titulo: data.titulo || 'Sin título',
-        año: data.año || '2023',
-        categorias: categorias.filter(c => c),
+        año: data.año || '2024',
+        categorias: categorias,
         destacado: data.destacado || false,
         director: data.director || 'Desconocido',
         duracion: parseInt(data.duracion) || 120,
         español: data.español || '',
         estreno: data.estreno || false,
-        fondo: data.fondo || data.poster || '',
-        poster: data.poster || 'https://via.placeholder.com/300x450?text=No+Poster',
+        fondo: window.fixImageUrl(rawFondo, 'original'),
+        poster: window.fixImageUrl(rawPoster),
         rating: parseFloat(data.rating) || 0,
-        sinopsis: data.sinopsis || data.sisposesis || 'Sin descripción disponible.',
+        // El campo de sinopsis en Firebase se llama 'sisposesis' (typo original)
+        sinopsis: data.sisposesis || data.sinopsis || data.overview || 'Sin descripción disponible.',
         latino: data.latino || '',
         subtitulado: data.subtitulado || '',
         tendencias: data.tendencias || false,
-        url: data.url || '',
+        url: data.url || data.español || '',
         tipo: data.tipo || 'pelicula',
         tmdb_id: data.tmdb_id,
         fecha_agregado: data.fecha_agregado || new Date().toISOString()
@@ -643,10 +653,10 @@ function processSerieData(id, data) {
         episodios: numEpisodios || 1,
         español: data.español || '',
         estreno: data.estreno || false,
-        fondo: data.fondo || data.portada || '',
-        poster: data.portada || 'https://via.placeholder.com/300x450?text=No+Poster',
+        fondo: fixImageUrl(data.fondo || data.backdrop_path || data.portada || data.poster || data.imagen || '', 'original'),
+        poster: fixImageUrl(data.portada || data.poster || data.poster_path || data.imagen || 'https://via.placeholder.com/300x450?text=CineMax+'),
         rating: parseFloat(data.rating) || 0,
-        sinopsis: data.sinopsis || 'Sin descripción disponible.',
+        sinopsis: data.sinopsis || data.overview || 'Sin descripción disponible.',
         latino: data.latino || '',
         subtitulado: data.subtitulado || '',
         tendencias: data.tendencias || false,
@@ -680,8 +690,8 @@ function processSerieFirestoreDoc(id, data) {
         episodios: parseInt(data.episodios) || 1,
         español: data.español || '',
         estreno: data.estreno || false,
-        fondo: data.fondo || data.portada || '',
-        poster: data.portada || 'https://via.placeholder.com/300x450?text=No+Poster',
+        fondo: fixImageUrl(data.fondo || data.backdrop_path || data.portada || data.poster || data.imagen || '', 'original'),
+        poster: fixImageUrl(data.portada || data.poster || data.poster_path || data.imagen || 'https://via.placeholder.com/300x450?text=CineMax+'),
         rating: parseFloat(data.rating) || 0,
         sinopsis: data.sinopsis || 'Sin descripción disponible.',
         latino: data.latino || '',
@@ -714,18 +724,24 @@ function mergeAndDisplayContent() {
     allYears.clear();
 
     allMovies.forEach(movie => {
-        movie.categorias.forEach(cat => {
-            if (cat && cat.trim() !== '') {
-                allGenres.add(cat.trim());
-            }
-        });
-        allYears.add(movie.año);
+        if (movie && movie.categorias && Array.isArray(movie.categorias)) {
+            movie.categorias.forEach(cat => {
+                if (cat && cat.trim() !== '') {
+                    allGenres.add(cat.trim());
+                }
+            });
+        }
+        if (movie.año) allYears.add(movie.año);
     });
 
-    console.log(`Contenido total cargado: ${allMovies.length}`);
+    console.log(`Contenido total cargado: ${allMovies.length} (Películas: ${moviesList.length}, Series: ${seriesList.length})`);
 
     // Ordenar por fecha de agregado (más recientes primero)
-    allMovies.sort((a, b) => new Date(b.fecha_agregado) - new Date(a.fecha_agregado));
+    allMovies.sort((a, b) => {
+        const dateA = a.fecha_agregado ? new Date(a.fecha_agregado) : new Date(0);
+        const dateB = b.fecha_agregado ? new Date(b.fecha_agregado) : new Date(0);
+        return dateB - dateA;
+    });
 
     // Mostrar contenido
     displayRecentSubido();
@@ -733,9 +749,42 @@ function mergeAndDisplayContent() {
     displayEstrenos();
     displaySeries();
     setupFeaturedMovie();
+    displayCatalog();
     displayCategorySections();
     displayFooterCategories();
     displayAllSeriesPage();
+
+    // Actualizar contadores del hero
+    if (typeof window.updateStats === 'function') {
+        const nMovies = moviesList.length;
+        const nSeries = seriesList.length;
+        window.updateStats(nMovies, nSeries);
+    }
+
+    // Exponer TMDB_API_KEY como global para el modal
+    window.TMDB_API_KEY = TMDB_API_KEY;
+}
+
+// === CATÁLOGO COMPLETO ===
+let catalogFilter = 'all';
+function displayCatalog() {
+    const grid = document.getElementById('catalogGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    window.filterCatalog = function(filter) {
+        catalogFilter = filter || 'all';
+        grid.innerHTML = '';
+        const items = catalogFilter === 'all' ? allMovies
+            : allMovies.filter(m => m.tipo === catalogFilter);
+        if (items.length === 0) {
+            grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><i class="fas fa-film"></i><p>Sin contenido</p></div>';
+            return;
+        }
+        const frag = document.createDocumentFragment();
+        items.forEach(m => frag.appendChild(createMovieCard(m, true)));
+        grid.appendChild(frag);
+    };
+    window.filterCatalog(catalogFilter);
 }
 
 function displayRecentSubido() {
@@ -930,117 +979,46 @@ function displayCategorySections() {
     requestAnimationFrame(processNextBatch);
 }
 
-// Create movie card
+// Create movie card (TMDB Style)
 function createMovieCard(movie, isGrid = false) {
-    if (!movie || !movie.id) {
-        console.warn('Intento de crear una tarjeta con datos de película no válidos:', movie);
-        return document.createDocumentFragment(); // Devuelve un fragmento vacío si no hay datos
-    }
+    if (!movie || !movie.id) return document.createDocumentFragment();
 
     const movieCard = document.createElement('div');
     movieCard.className = 'movie-card';
+    movieCard.tabIndex = 0;
 
-    // Badge de novedad en tiempo real
-    if (movie.esNueva) {
-        const badge = document.createElement('div');
-        badge.className = 'badge badge-new';
-        badge.innerHTML = '<i class="fas fa-bolt"></i> Nuevo';
-        movieCard.appendChild(badge);
-    }
+    const posterUrl = window.fixImageUrl(movie.poster || movie.portada || movie.poster_path || movie.imagen);
+    const rawRating = (typeof movie.rating === 'number') ? movie.rating : 0;
+    const ratingPercent = Math.round(rawRating * 10);
+    const year = movie.año || '';
 
-    const posterUrl = movie.poster || 'https://via.placeholder.com/300x450?text=No+Poster';
-    const rating = (typeof movie.rating === 'number') ? movie.rating.toFixed(1) : 'N/A';
-    const year = movie.año || 'N/A';
-    const categories = Array.isArray(movie.categorias) ? movie.categorias : [];
+    let scoreCls = 'low';
+    if (ratingPercent >= 70) scoreCls = '';       // green (default)
+    else if (ratingPercent >= 40) scoreCls = 'avg';
 
     movieCard.innerHTML = `
-        <img src="${posterUrl}" alt="${movie.titulo}" class="movie-poster" loading="lazy" width="200" height="300">
-        <div class="movie-info">
-            <h3 class="movie-title">${movie.titulo || 'Sin Título'}</h3>
-            <div class="movie-meta">
-                <span class="rating"><i class="fas fa-star"></i> ${rating}</span>
-                <span>${year}</span>
+        <div class="card-img-wrap">
+            <img src="${posterUrl}" alt="${movie.titulo}" loading="lazy"
+                 onerror="this.src='https://via.placeholder.com/145x218?text=CineMax+'">
+            <div class="card-hover-layer">
+                <div class="play-circle"><i class="fas fa-info-circle"></i></div>
             </div>
-            <div class="movie-genres">
-                ${categories.slice(0, 2).map(cat => `<span class="genre">${cat}</span>`).join('')}
-            </div>
+            ${ratingPercent > 0 ? `<div class="score-dot ${scoreCls}">${ratingPercent}%</div>` : ''}
+            ${movie.esNueva ? '<div class="new-tag">NUEVO</div>' : ''}
+        </div>
+        <div class="card-body">
+            <div class="card-name">${movie.titulo}</div>
+            <div class="card-year">${year}</div>
         </div>
     `;
 
-    const img = movieCard.querySelector('img');
-    if (img) {
-        img.onerror = () => {
-            img.src = 'https://via.placeholder.com/300x450?text=Error+Img';
-            img.classList.add('loaded');
-        };
-        img.onload = () => {
-            img.classList.add('loaded');
-        };
-        if (img.complete) {
-            img.classList.add('loaded');
+    const open = () => {
+        if (typeof window.openDetail === 'function') {
+            window.openDetail(movie);
         }
-    }
-
-    // Eventos
-    movieCard.tabIndex = 0; // Hacer enfocable para control remoto / teclado
-    
-    movieCard.addEventListener('click', (e) => {
-        if (!e.target.closest('button')) {
-            window.location.href = `ver.html?id=${movie.id}`;
-        }
-    });
-
-    movieCard.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            window.location.href = `ver.html?id=${movie.id}`;
-        }
-    });
-
-    // Favorite Button
-    const favBtn = document.createElement('button');
-    favBtn.className = isFavorite(movie.id) ? 'fav-btn active' : 'fav-btn';
-    favBtn.innerHTML = isFavorite(movie.id) ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
-    favBtn.title = 'Añadir a favoritos';
-    favBtn.onclick = (e) => {
-        e.stopPropagation();
-        toggleFavorite(movie);
-        
-        // Actualizar icono
-        const isFav = isFavorite(movie.id);
-        favBtn.className = isFav ? 'fav-btn active' : 'fav-btn';
-        favBtn.innerHTML = isFav ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
     };
-    movieCard.appendChild(favBtn);
-
-    const playBtn = document.createElement('button');
-    playBtn.className = 'btn btn-small';
-    playBtn.innerHTML = '<i class="fas fa-play"></i> Ver';
-    playBtn.style.cssText = `
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    `;
-    playBtn.onclick = (e) => {
-        e.stopPropagation();
-        window.location.href = `ver.html?id=${movie.id}`;
-    };
-
-    movieCard.appendChild(playBtn);
-
-    movieCard.addEventListener('mouseenter', () => {
-        playBtn.style.opacity = '1';
-    });
-
-    movieCard.addEventListener('mouseleave', () => {
-        playBtn.style.opacity = '0';
-    });
-
-    // Actualizar datos (Rating y Año) desde TMDB si existe ID
-    if (movie.tmdb_id) {
-        updateCardFromTMDB(movieCard, movie.tmdb_id, movie.tipo);
-    }
+    movieCard.addEventListener('click', open);
+    movieCard.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
 
     return movieCard;
 }
@@ -1057,23 +1035,25 @@ async function updateCardFromTMDB(card, tmdbId, type) {
             const year = date ? date.split('-')[0] : null;
 
             if (rating) {
-                const ratingEl = card.querySelector('.rating');
-                if (ratingEl) ratingEl.innerHTML = `<i class="fas fa-star"></i> ${rating}`;
+                const ratingEl = card.querySelector('.user-score');
+                if (ratingEl) {
+                    const percent = Math.round(rating * 10);
+                    ratingEl.innerHTML = `${percent}<span>%</span>`;
+                    
+                    let scoreColor = 'var(--danger)';
+                    if (percent >= 70) scoreColor = 'var(--success)';
+                    else if (percent >= 40) scoreColor = 'var(--warning)';
+                    ratingEl.style.borderColor = scoreColor;
+                }
             }
 
             if (year) {
-                const metaDiv = card.querySelector('.movie-meta');
-                if (metaDiv) {
-                    const spans = metaDiv.querySelectorAll('span');
-                    // El año suele ser el segundo elemento span (después del rating)
-                    if (spans.length > 1) {
-                        spans[1].textContent = year;
-                    }
-                }
+                const dateEl = card.querySelector('.movie-card-date');
+                if (dateEl) dateEl.textContent = year;
             }
         }
     } catch (error) {
-        // Fallo silencioso para no interrumpir la UI
+        // Fallo silencioso
     }
 }
 
