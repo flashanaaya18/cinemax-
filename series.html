@@ -1,153 +1,412 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Series - CineMax+ Premium</title>
-    <meta name="description" content="Explora las mejores series en HD. Calidad premium y streaming fluido.">
-    <meta name="theme-color" content="#ffd700">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineMax+ | Todas las Series</title>
+  <meta name="description" content="Explora nuestro catálogo completo de series en HD. Calidad premium y streaming fluido.">
+  <meta name="theme-color" content="#f5c518">
+  <link rel="icon" type="image/png" href="Icon-192.png">
+  <link rel="apple-touch-icon" href="Icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ════════════════════════════════════════
+       BASE (Copy of index.html styles)
+    ════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:  #f5c518;
+      --green: #f5c518;
+      --dark:  #000000;
+      --bg:    #000000;
+      --bg2:   #0a0a0a;
+      --card:  #111111;
+      --card2: #1a1a1a;
+      --txt:   #ffffff;
+      --muted: #94a3b8;
+      --dim:   #4b5563;
+      --border: rgba(245,197,24,0.12);
+      --r: 10px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--txt);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #111; }
+
+    /* ════════════════════════════════════════
+       HEADER
+    ════════════════════════════════════════ */
+    #mainHeader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+      background: rgba(0,0,0,0.97);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(245,197,24,0.15);
+      z-index: 500;
+      display: flex; align-items: center;
+    }
+    .hdr {
+      max-width: 1440px; margin: 0 auto; padding: 0 1.5rem;
+      width: 100%; display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
+    }
+    .left-hdr { display: flex; align-items: center; gap: 0.8rem; }
+    .logo { font-size: 1.6rem; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: -0.5px; }
+    .logo span { color: var(--blue); }
+    .nav-items { display: flex; gap: 1.2rem; margin-left: 1.5rem; }
+    .nav-items a { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-items a:hover { color: #fff; }
+
+    .search-wrap {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px; padding: 7px 16px;
+      transition: all 0.2s;
+    }
+    .search-wrap:focus-within { border-color: var(--blue); background: rgba(255,255,255,0.11); box-shadow: 0 0 0 3px rgba(245,197,24,0.15); }
+    .search-wrap i { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+    #searchInput { background: none; border: none; outline: none; color: #fff; font-family: 'Outfit', sans-serif; font-size: 0.88rem; width: 185px; }
+
+    /* ════════════════════════════════════════
+       MAIN LAYOUT
+    ════════════════════════════════════════ */
+    .hero-mini {
+      padding: 100px 1.5rem 40px;
+      background: linear-gradient(160deg, #0d0d00 0%, #000000 65%);
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-mini h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem; }
+    .hero-mini p { color: var(--muted); font-size: 1rem; }
+
+    .content { max-width: 1440px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+
+    /* Grid layout */
+    .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.5rem 1.2rem; }
     
-    <link rel="icon" type="image/png" href="Icon-192.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    .movie-card { flex-shrink: 0; width: 100%; cursor: pointer; transition: transform 0.22s ease; }
+    .movie-card:hover { transform: translateY(-6px); }
+    .card-img-wrap {
+      width: 100%; aspect-ratio: 2/3; border-radius: var(--r);
+      overflow: hidden; background: var(--card);
+      position: relative; box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      border: 1px solid var(--border);
+    }
+    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
+    .movie-card:hover .card-img-wrap img { transform: scale(1.07); }
+    .card-hover-layer { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 55%); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s; }
+    .movie-card:hover .card-hover-layer { opacity: 1; }
+    .play-circle { width: 44px; height: 44px; border-radius: 50%; background: var(--blue); color: #000; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 0 24px rgba(245,197,24,0.4); transform: scale(0.8); transition: transform 0.22s; }
+    .movie-card:hover .play-circle { transform: scale(1); }
+    .score-dot { position: absolute; bottom: -12px; left: 8px; width: 32px; height: 32px; border-radius: 50%; background: #111; border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 0.58rem; font-weight: 800; z-index: 4; color: #fff; }
+    .card-body { padding: 1rem 0 0.2rem; }
+    .card-name { font-size: 0.85rem; font-weight: 600; line-height: 1.3; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-year { font-size: 0.75rem; color: var(--dim); margin-top: 3px; }
 
-    <style>
-        .page-header {
-            padding-top: 140px;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-        .page-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin-bottom: 10px;
-        }
-        .page-subtitle {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-        }
-        main { min-height: 80vh; }
-    </style>
+    /* Detail Panel */
+    #detailPanel { position: fixed; inset: 0; z-index: 600; background: var(--bg); transform: translateX(100%); transition: transform 0.38s cubic-bezier(0.4,0,0.2,1); overflow-y: auto; overflow-x: hidden; }
+    #detailPanel.open { transform: translateX(0); }
+    .dp-hero { width: 100%; height: clamp(240px, 38vw, 460px); background: var(--card) no-repeat center / cover; position: relative; }
+    .dp-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.15) 100%); }
+    .dp-back-btn { position: absolute; top: 68px; left: 1.2rem; z-index: 10; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.2); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); transition: all 0.2s; }
+    .dp-back-btn:hover { background: var(--blue); color: #000; }
+    .dp-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+    .dp-top { display: grid; grid-template-columns: 165px 1fr; gap: 1.8rem; margin-top: -75px; position: relative; z-index: 2; }
+    .dp-poster { width: 165px; border-radius: 12px; border: 3px solid rgba(255,255,255,0.1); box-shadow: 0 14px 42px rgba(0,0,0,0.65); background: var(--card); }
+    .dp-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 900; margin-bottom: 0.35rem; }
+    .dp-overview { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-top: 1.5rem; }
+
+    /* Seasons */
+    .seasons-area { margin-top: 2rem; }
+    .s-tabs { display: flex; gap: 0.6rem; overflow-x: auto; padding-bottom: 1rem; }
+    .s-tab { padding: 10px 22px; border-radius: 8px; background: var(--card); border: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .s-tab.active { background: var(--blue); color: #000; border-color: var(--blue); }
+    .eps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .ep-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: all 0.25s; }
+    .ep-card:hover { border-color: var(--blue); transform: translateY(-3px); }
+    .ep-thumb { position: relative; aspect-ratio: 16/9; background: var(--card2); }
+    .ep-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .ep-body { padding: 1rem; }
+    .ep-title { font-size: 0.9rem; font-weight: 700; color: #fff; }
+
+    /* Player Modal */
+    #playerModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
+    #playerModal.open { display: flex; }
+    .player-box { width: 100%; max-width: 1100px; }
+    .player-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .player-close { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+    .player-frame { aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; }
+    #mainPlayer { width: 100%; height: 100%; border: none; }
+
+    /* Loader */
+    .loader { display: flex; justify-content: center; padding: 5rem; width: 100%; }
+    .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,217,0,0.1); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    footer { background: #000; padding: 3rem 1.5rem; border-top: 1px solid var(--border); text-align: center; }
+    .ft-copy { color: var(--dim); font-size: 0.85rem; margin-top: 1rem; }
+
+    @media (max-width: 768px) {
+      .dp-top { grid-template-columns: 130px 1fr; gap: 1rem; }
+      .dp-poster { width: 130px; }
+      .eps-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
-    <!-- Premium Header -->
-    <header id="mainHeader" style="background: #03253f; position: fixed; top: 0; left: 0; width: 100%; height: 64px; z-index: 1000; display: flex; align-items: center;">
-        <div class="container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-            <div style="display: flex; align-items: center; gap: 2rem;">
-                <a href="index.html" style="font-size: 1.8rem; font-weight: 800; color: #fff; text-decoration: none;">CineMax+</a>
-                <nav class="nav-links">
-                    <ul style="display: flex; list-style: none; gap: 1.5rem; margin: 0; padding: 0;">
-                        <li><a href="index.html" style="color: #fff; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Películas</a></li>
-                        <li><a href="series.html" style="color: #fff; text-decoration: none; font-weight: 600; font-size: 0.95rem; opacity: 0.7;">Series</a></li>
-                        <li><a href="categorias.html" style="color: #fff; text-decoration: none; font-weight: 600; font-size: 0.95rem;">Categorías</a></li>
-                    </ul>
-                </nav>
-            </div>
-            <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <a href="perfil.html" style="color: white; font-size: 1.3rem;"><i class="fas fa-user-circle"></i></a>
-            </div>
-        </div>
-    </header>
 
-    <main>
-        <div class="container">
-            <section id="searchResults" style="display: none; padding-top: 120px;">
-                <div class="section-header">
-                    <h2 class="section-title">Resultados de Búsqueda</h2>
-                    <button class="btn btn-small btn-outline" onclick="window.location.reload()">Cerrar</button>
-                </div>
-                <div class="movies-grid-tmdb" id="searchResultsMovies"></div>
-            </section>
-
-            <div id="mainSeriesContent">
-                <div class="page-header">
-                    <h1 class="page-title">Catálogo de Series</h1>
-                    <p class="page-subtitle">Temporadas completas en la mejor calidad HD</p>
-                </div>
-
-                <div class="movies-grid-tmdb" id="allSeriesGrid">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Premium Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <a href="#" class="logo">Cine<span>Max+</span></a>
-                    <p>La mejor calidad de streaming, diseñada para ti.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Géneros</h3>
-                    <ul class="footer-links" id="footerCategories"></ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Explorar</h3>
-                    <ul class="footer-links">
-                        <li><a href="index.html">Inicio</a></li>
-                        <li><a href="tendencias.html">Tendencias</a></li>
-                        <li><a href="estrenos.html">Estrenos</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2024 CineMax+ Premium. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Firebase & App JS -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="app.js"></script>
-
-    <script>
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('mainHeader');
-            if (window.scrollY > 50) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
-        });
-
-        // Telegram Notification Logic
-        function closeTgNotif() {
-            document.getElementById('tgNotif').classList.remove('show');
-            localStorage.setItem('tgNotifClosed', 'true');
-        }
-
-        setTimeout(() => {
-            if (!localStorage.getItem('tgNotifClosed')) {
-                document.getElementById('tgNotif').classList.add('show');
-            }
-        }, 5000); // Show after 5 seconds
-    </script>
-
-    <!-- Telegram Notification Popup -->
-    <div class="telegram-notif" id="tgNotif">
-        <button class="tg-close" onclick="closeTgNotif()" id="tgCloseBtn" tabindex="0" aria-label="Cerrar">&times;</button>
-        <div class="tg-icon-wrapper">
-            <i class="fab fa-telegram-plane"></i>
-        </div>
-        <div class="tg-content">
-            <span class="tg-title">¡Únete al Grupo!</span>
-            <p class="tg-text">Pide tu película o serie favorita y entérate de todo lo nuevo que subimos al instante.</p>
-            <a href="https://t.me/+E7lcEA9LbBgyZmI5" target="_blank" class="tg-btn" id="tgJoinBtn" onclick="closeTgNotif()" tabindex="0">Unirme Ahora</a>
-        </div>
+<header id="mainHeader">
+  <div class="hdr">
+    <div class="left-hdr">
+      <a href="index.html" class="logo">Cine<span>Max+</span></a>
+      <nav class="nav-items">
+        <a href="index.html">Inicio</a>
+        <a href="series.html" style="color:var(--blue)">Series</a>
+        <a href="descarga.html">Descargar la App</a>
+      </nav>
     </div>
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Buscar series..." autocomplete="off">
+    </div>
+  </div>
+</header>
 
+<section class="hero-mini">
+  <h1>Catálogo de <span>Series</span></h1>
+  <p>Explora temporadas completas con la mejor calidad premium.</p>
+</section>
 
-    <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></button>
+<div class="content">
+  <div class="grid-layout" id="allSeriesGrid">
+    <div class="loader"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="logo" style="text-decoration:none;">Cine<span>Max+</span></a>
+  <p class="ft-copy">&copy; 2025 CineMax+. Todas las series en un solo lugar.</p>
+</footer>
+
+<!-- Detail Panel -->
+<div id="detailPanel">
+  <button class="dp-back-btn" onclick="closeDetail()"><i class="fas fa-arrow-left"></i></button>
+  <div id="dpContent"></div>
+</div>
+
+<!-- Player Modal -->
+<div id="playerModal">
+  <div class="player-box">
+    <div class="player-hdr">
+      <h3 id="playerTitle"></h3>
+      <button class="player-close" onclick="closePlayer()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="player-frame">
+      <iframe id="mainPlayer" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- NODOS OCULTOS PARA app.js -->
+<div style="display:none;">
+  <div id="trendingMovies"></div>
+  <div id="estrenosMovies"></div>
+  <div id="seriesRow"></div>
+  <div id="catalogGrid"></div>
+  <div id="recentMovies"></div>
+  <div id="heroSection"></div>
+  <div id="heroTitle"></div>
+  <div id="heroDescription"></div>
+  <button id="heroWatchBtn"></button>
+  <button id="heroDetailsBtn"></button>
+  <button id="mobileMenuBtn"></button>
+  <div id="navLinks"></div>
+  <div id="movieModalBody"></div>
+  <div id="videoPlayer"></div>
+  <div id="videoModalTitle"></div>
+  <button id="closeVideoModal"></button>
+  <button id="closeMovieModal"></button>
+  <div id="tendencias"></div>
+</div>
+
+<!-- Scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="app.js"></script>
+
+<script>
+  /* Filtro automático para series */
+  window.addEventListener('contentLoaded', () => {
+    if (typeof window.displayCatalog === 'function') {
+      // Filtrar por series al cargar
+      window.filterCatalog('serie');
+    }
+  });
+
+  // Sobrescribir renderizado para que use #allSeriesGrid
+  const originalDisplay = window.displayCatalog;
+  window.displayCatalog = function(filter = 'all') {
+    const grid = document.getElementById('allSeriesGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    
+    const list = filter === 'all' ? allMovies : allMovies.filter(m => m.tipo === filter);
+    const seriesIdx = list.filter(m => m.tipo === 'serie');
+
+    if (seriesIdx.length === 0) {
+      grid.innerHTML = '<div class="empty-msg"><p>No se encontraron series.</p></div>';
+      return;
+    }
+
+    seriesIdx.forEach(movie => {
+      const card = createMovieCard(movie);
+      grid.appendChild(card);
+    });
+  };
+
+  /* Detail Panel Logic (Same as index) */
+  window.openDetail = async function(movie) {
+    const panel = document.getElementById('detailPanel');
+    const content = document.getElementById('dpContent');
+    panel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    content.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+    
+    window.currentMovieData = movie;
+    
+    try {
+      const isSerie = movie.tipo === 'serie';
+      const mtype = isSerie ? 'tv' : 'movie';
+      let tmdb = null;
+      if (movie.tmdb_id && window.TMDB_API_KEY) {
+        const r = await fetch(`https://api.themoviedb.org/3/${mtype}/${movie.tmdb_id}?api_key=${window.TMDB_API_KEY}&language=es-ES&append_to_response=credits`);
+        if (r.ok) tmdb = await r.json();
+      }
+
+      let seasonsData = null;
+      if (isSerie) {
+        const rtdbPaths = [`series/${movie.id}`, `peliculas/${movie.id}`, `series-firestore/${movie.id}`, movie.id];
+        for (const path of rtdbPaths) {
+          try {
+            const snap = await window.rtdb.ref(path).once('value');
+            if (snap.exists() && snap.val().temporadas) { seasonsData = snap.val().temporadas; break; }
+          } catch(_) {}
+        }
+      }
+
+      const title = tmdb?.name || movie.titulo;
+      const overview = tmdb?.overview || movie.sinopsis || 'Sin descripción.';
+      const banner = window.fixImageUrl(tmdb?.backdrop_path || movie.fondo || movie.poster, 'original');
+      const poster = window.fixImageUrl(tmdb?.poster_path || movie.poster, 'w500');
+
+      content.innerHTML = `
+        <div class="dp-hero" style="background-image:url('${banner}')"></div>
+        <div class="dp-inner">
+          <div class="dp-top">
+            <img class="dp-poster" src="${poster}" alt="${title}">
+            <div class="meta">
+              <h1 class="dp-title">${title}</h1>
+              <div class="dp-overview">${overview}</div>
+            </div>
+          </div>
+          <div class="seasons-area" id="seasonsArea"></div>
+        </div>`;
+
+      if (isSerie) renderSeasons(seasonsData, tmdb, movie);
+    } catch(e) { console.error(e); }
+  };
+
+  function renderSeasons(data, tmdb, movie) {
+    const area = document.getElementById('seasonsArea');
+    if (!area) return;
+    
+    let seasons = [];
+    if (data) Object.keys(data).forEach(k => seasons.push({ num: k, label: `Temp ${k}`, data: data[k], source: 'firebase' }));
+    else if (tmdb?.seasons) tmdb.seasons.forEach(s => { if(s.season_number>0) seasons.push({ num: s.season_number, label: `Temp ${s.season_number}`, source: 'tmdb' })});
+
+    area.innerHTML = `
+      <p style="font-weight:700;margin-bottom:1rem;font-size:1.1rem;">Temporadas</p>
+      <div class="s-tabs" id="sTabs">
+        ${seasons.map((s,i) => `<button class="s-tab ${i===0?'active':''}" onclick="selectSeason('${s.num}')" data-n="${s.num}">${s.label}</button>`).join('')}
+      </div>
+      <div class="eps-grid" id="epsGrid"></div>`;
+    
+    window._seasons = seasons;
+    if (seasons.length) selectSeason(seasons[0].num);
+  }
+
+  window.selectSeason = async function(n) {
+    document.querySelectorAll('.s-tab').forEach(t => t.classList.toggle('active', t.dataset.n == n));
+    const grid = document.getElementById('epsGrid');
+    if (!grid) return;
+    grid.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
+
+    const season = (window._seasons || []).find(s => s.num == n);
+    const tmdbId = window.currentMovieData?.tmdb_id;
+    let tmdbEps = {};
+
+    if (tmdbId) {
+      const res = await fetch(`https://api.themoviedb.org/3/tv/${tmdbId}/season/${n}?api_key=${window.TMDB_API_KEY}&language=es-ES`);
+      if (res.ok) {
+        const d = await res.json();
+        d.episodes?.forEach(e => tmdbEps[e.episode_number] = e);
+      }
+    }
+
+    if (season?.source === 'firebase') {
+      const eps = season.data.episodios;
+      grid.innerHTML = Object.keys(eps).map(num => {
+        const e = typeof eps[num] === 'object' ? eps[num] : { url: eps[num] };
+        const t = tmdbEps[num] || {};
+        const thumb = e.imagen || (t.still_path ? `https://image.tmdb.org/t/p/w300${t.still_path}` : '');
+        return `
+          <div class="ep-card" onclick="playVideo('${e.url}','${(e.titulo||t.name||'E'+num).replace(/'/g,"\\'")}','')">
+            <div class="ep-thumb">
+              <img src="${thumb}" onerror="this.src='https://via.placeholder.com/300x170?text=Episodio+'+${num}">
+            </div>
+            <div class="ep-body"><div class="ep-title">${e.titulo || t.name || 'Episodio ' + num}</div></div>
+          </div>`;
+      }).join('');
+    } else {
+      grid.innerHTML = Object.values(tmdbEps).map(e => `
+        <div class="ep-card">
+          <div class="ep-thumb"><img src="https://image.tmdb.org/t/p/w300${e.still_path}"></div>
+          <div class="ep-body"><div class="ep-title">${e.name}</div></div>
+        </div>`).join('');
+    }
+  };
+
+  window.closeDetail = () => { document.getElementById('detailPanel').classList.remove('open'); document.body.style.overflow = ''; };
+  window.playVideo = (url, title) => {
+    if (!url) return;
+    document.getElementById('playerTitle').textContent = title;
+    document.getElementById('mainPlayer').src = url;
+    document.getElementById('playerModal').classList.add('open');
+  };
+  window.closePlayer = () => { document.getElementById('playerModal').classList.remove('open'); document.getElementById('mainPlayer').src = ''; };
+
+  // Trigger load
+  const checkInterval = setInterval(() => {
+    if (typeof allMovies !== 'undefined' && allMovies.length > 0) {
+      window.displayCatalog('serie');
+      clearInterval(checkInterval);
+    }
+  }, 500);
+</script>
 </body>
 </html>
