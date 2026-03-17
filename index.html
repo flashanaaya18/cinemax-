@@ -1503,7 +1503,7 @@
     }
 
     window.originalTitle = document.title;
-    window.openDetail = async function (movie) {
+    window.openDetail = async function (movie, pushState = true) {
       const panel = document.getElementById('detailPanel');
       const content = document.getElementById('dpContent');
 
@@ -1511,7 +1511,14 @@
       document.body.style.overflow = 'hidden';
       panel.scrollTop = 0;
 
-      if (movie.titulo) document.title = `${movie.titulo} | CineMax+`;
+      if (movie.titulo) {
+        document.title = `${movie.titulo} | CineMax+`;
+        if (pushState) {
+          const slug = movie.titulo.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+          const newUrl = `${window.location.pathname}?movie=${slug}&id=${movie.id}`;
+          history.pushState({ movieId: movie.id, type: 'movieDetail' }, document.title, newUrl);
+        }
+      }
       content.innerHTML = '<div class="loader" style="min-height:60vh;"><div class="spinner"></div></div>';
 
       // Guardar referencia global para que selectSeason pueda acceder al tmdb_id
@@ -1810,11 +1817,48 @@
 
 
     /* ════ CLOSE PANEL ════ */
-    window.closeDetail = function () {
+    window.closeDetail = function (pushState = true) {
       document.getElementById('detailPanel').classList.remove('open');
       document.body.style.overflow = '';
       document.title = window.originalTitle || "CineMax+ | Catálogo de Películas y Series";
+      if (pushState) {
+        history.pushState({ type: 'home' }, document.title, window.location.pathname);
+      }
     };
+
+    /* ════ BROWSER NAVIGATION (BACK BUTTON) ════ */
+    window.addEventListener('popstate', (event) => {
+      if (event.state && event.state.movieId) {
+        // Si el estado tiene un ID, intentar abrir ese detalle
+        // Nota: allMovies debe estar cargado
+        const movie = window.allMovies?.find(m => m.id == event.state.movieId);
+        if (movie) window.openDetail(movie, false);
+      } else {
+        // De lo contrario, cerrar el panel
+        window.closeDetail(false);
+      }
+    });
+
+    /* ════ DEEP LINKING (CHECK URL ON LOAD) ════ */
+    function checkUrlParameters() {
+      const params = new URLSearchParams(window.location.search);
+      const movieId = params.get('id');
+      if (movieId) {
+        // Esperar a que los datos de Firebase carguen (allMovies se llena en app.js)
+        const checkInterval = setInterval(() => {
+          if (window.allMovies && window.allMovies.length > 0) {
+            const movie = window.allMovies.find(m => m.id == movieId);
+            if (movie) window.openDetail(movie, false);
+            clearInterval(checkInterval);
+          }
+        }, 500);
+        // Timeout para no buscar infinitamente
+        setTimeout(() => clearInterval(checkInterval), 10000);
+      }
+    }
+    // Ejecutar al cargar la página
+    window.addEventListener('load', checkUrlParameters);
+
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetail(); closePlayer(); } });
 
     /* ════ PLAYER ════ */
