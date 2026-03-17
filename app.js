@@ -263,15 +263,17 @@ function setupTVNavigation() {
             if (openModal) {
                 e.preventDefault();
                 if (openModal.id === 'dnsModal') closeDnsModal();
-                else if (openModal.id === 'videoModal') document.getElementById('closeVideoModal').click();
+            else if (openModal.id === 'videoModal') document.getElementById('closeVideoModal').click();
                 else openModal.style.display = 'none';
                 return;
             }
 
-            // Si está en ver.html, ir al inicio
-            if (window.location.pathname.includes('ver.html')) {
-                window.location.href = 'index.html';
+            // Si hay un ID en la URL y estamos en una página que no es la principal, redirigir
+            if (window.location.search.includes('id=') && !window.location.pathname.includes('index.html') && window.location.pathname !== '/') {
+                window.location.href = 'index.html' + window.location.search;
             }
+
+
         }
     });
 }
@@ -1100,10 +1102,10 @@ function updateHeroUI(movie) {
         heroTitle.textContent = movie.titulo;
         heroDescription.textContent = movie.sinopsis.substring(0, 150) + '...';
         
-        heroWatchBtn.onclick = () => window.location.href = `ver.html?id=${movie.id}`;
+        heroWatchBtn.onclick = () => { if (window.openDetail) window.openDetail(movie); };
         heroWatchBtn.tabIndex = 0;
         
-        heroDetailsBtn.onclick = () => window.location.href = `ver.html?id=${movie.id}`;
+        heroDetailsBtn.onclick = () => { if (window.openDetail) window.openDetail(movie); };
         heroDetailsBtn.tabIndex = 0;
     });
 

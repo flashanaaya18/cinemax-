@@ -454,8 +454,8 @@
                     </div>
                 `;
                 
-                card.onclick = () => window.location.href = `ver.html?id=${movie.id}`;
-                card.onkeydown = (e) => { if(e.key === 'Enter') window.location.href = `ver.html?id=${movie.id}`; };
+                card.onclick = () => window.location.href = `index.html?id=${movie.id}`;
+                card.onkeydown = (e) => { if(e.key === 'Enter') window.location.href = `index.html?id=${movie.id}`; };
                 favoritesList.appendChild(card);
             });
         }

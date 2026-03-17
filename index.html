@@ -1963,16 +1963,23 @@
     function checkUrlParameters() {
       const params = new URLSearchParams(window.location.search);
       const movieId = params.get('id');
+      const shouldPlay = params.get('play') === '1';
+      
       if (movieId) {
-        // Esperar a que los datos de Firebase carguen (allMovies se llena en app.js)
         const checkInterval = setInterval(() => {
           if (window.allMovies && window.allMovies.length > 0) {
             const movie = window.allMovies.find(m => m.id == movieId);
-            if (movie) window.openDetail(movie, false);
+            if (movie) {
+              window.openDetail(movie, false);
+              // Si es película y tiene play=1, intentar reproducir
+              if (shouldPlay && movie.tipo !== 'serie') {
+                const url = movie.español || movie.latino || movie.subtitulado || movie.url;
+                if (url) setTimeout(() => window.playVideo(url, movie.titulo), 1000);
+              }
+            }
             clearInterval(checkInterval);
           }
         }, 500);
-        // Timeout para no buscar infinitamente
         setTimeout(() => clearInterval(checkInterval), 10000);
       }
     }
@@ -1984,11 +1991,24 @@
     /* ════ PLAYER ════ */
     window.playVideo = function (url, title) {
       if (!url || !url.trim()) return;
+      
+      let finalUrl = url.trim();
+      
+      // Convertir YouTube links a Embed
+      if (finalUrl.includes('youtube.com/watch?v=')) {
+        const id = finalUrl.split('v=')[1]?.split('&')[0];
+        if (id) finalUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
+      } else if (finalUrl.includes('youtu.be/')) {
+        const id = finalUrl.split('youtu.be/')[1]?.split('?')[0];
+        if (id) finalUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
+      }
+
       const modal = document.getElementById('playerModal');
       const iframe = document.getElementById('mainPlayer');
       const pt = document.getElementById('playerTitle');
       if (pt) pt.textContent = decodeURIComponent(title || '');
-      iframe.src = url;
+      
+      iframe.src = finalUrl;
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
     };
