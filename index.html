@@ -37,10 +37,10 @@
     "@type": "WebSite",
     "name": "CineMax+",
     "alternateName": "CineMax Plus",
-    "url": "https://cinemax-plus.vercel.app/",
+    "url": "https://flashanaaya18.github.io/cinemax-/",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://cinemax-plus.vercel.app/?s={search_term_string}",
+      "target": "https://flashanaaya18.github.io/cinemax-/?s={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   }
@@ -1502,7 +1502,7 @@
       _si.addEventListener('input', () => { if (_si.value.trim() === '' && typeof clearSearch === 'function') clearSearch(); });
     }
 
-    /* ════ DETAIL PANEL ════ */
+    window.originalTitle = document.title;
     window.openDetail = async function (movie) {
       const panel = document.getElementById('detailPanel');
       const content = document.getElementById('dpContent');
@@ -1511,6 +1511,7 @@
       document.body.style.overflow = 'hidden';
       panel.scrollTop = 0;
 
+      if (movie.titulo) document.title = `${movie.titulo} | CineMax+`;
       content.innerHTML = '<div class="loader" style="min-height:60vh;"><div class="spinner"></div></div>';
 
       // Guardar referencia global para que selectSeason pueda acceder al tmdb_id
@@ -1812,6 +1813,7 @@
     window.closeDetail = function () {
       document.getElementById('detailPanel').classList.remove('open');
       document.body.style.overflow = '';
+      document.title = window.originalTitle || "CineMax+ | Catálogo de Películas y Series";
     };
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetail(); closePlayer(); } });
 
