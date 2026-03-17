@@ -469,9 +469,19 @@
         };
 
         // --- LÓGICA DE SOLICITUDES TMDB (TMDB API, NO FIREBASE) ---
-        const TMDB_API_KEY = window.CineMaxConfig ? window.CineMaxConfig.tmdb.apiKey : "";
-        const BOT_TOKEN = window.CineMaxConfig ? window.CineMaxConfig.telegram.botToken : "";
-        const CHAT_ID_PEDIDOS = window.CineMaxConfig ? window.CineMaxConfig.telegram.chatIdPedidos : "";
+        // Función para obtener variables de entorno con fallback (Compatible con Vite/Vercel)
+        const getEnvVar = (key, fallback) => {
+            try {
+                if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
+                    return import.meta.env[key];
+                }
+            } catch (e) {}
+            return fallback;
+        };
+
+        const TMDB_API_KEY = getEnvVar('VITE_TMDB_KEY', window.CineMaxConfig ? window.CineMaxConfig.tmdb.apiKey : "");
+        const BOT_TOKEN = getEnvVar('VITE_TELEGRAM_BOT_TOKEN', window.CineMaxConfig ? window.CineMaxConfig.telegram.botToken : "");
+        const CHAT_ID_PEDIDOS = getEnvVar('VITE_CHAT_ID_PEDIDOS', window.CineMaxConfig ? window.CineMaxConfig.telegram.chatIdPedidos : "");
 
         async function searchTMDB() {
             const query = document.getElementById('tmdbSearchInput').value.trim();

@@ -94,8 +94,18 @@ const _0x5a3 = "cGVsaXhwbHVoZHo=";
 const _0x5a4 = "aHR0cHM6Ly9wZWxpeHBsdWhkei1kZWZhdWx0LXJ0ZGIuZmlyZWJhc2Vpby5jb20v"; 
 const _0x5a5 = "OTg2OWZhYjdjODY3ZTcyMjE0Yzg2MjhjNjAyOWVjNzQ=";
 
+// Función para obtener variables de entorno con fallback (Compatible con Vite/Vercel)
+const getEnvVar = (key, fallback) => {
+    try {
+        if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
+            return import.meta.env[key];
+        }
+    } catch (e) {}
+    return fallback;
+};
+
 const firebaseConfig = {
-    apiKey: atob(_0x5a1.replace(/-/g, "+").replace(/_/g, "/")),
+    apiKey: getEnvVar('VITE_FIREBASE_API_KEY', atob(_0x5a1.replace(/-/g, "+").replace(/_/g, "/"))),
     authDomain: atob(_0x5a2),
     projectId: atob(_0x5a3),
     databaseURL: atob(_0x5a4),
@@ -104,7 +114,7 @@ const firebaseConfig = {
     appId: "1:817326374957:web:fabd709c7ea916a446f8a4"
 };
 
-const TMDB_API_KEY = atob(_0x5a5);
+const TMDB_API_KEY = getEnvVar('VITE_TMDB_KEY', atob(_0x5a5));
 
 // 3. INICIALIZACIÓN FIREBASE
 let app, db, rtdb;
@@ -484,9 +494,8 @@ function loadMoviesFromFirebase() {
                 if (!moviesLoaded) {
                     moviesLoaded = true;
                     checkInitialLoad();
-                } else {
-                    debouncedUpdate();
                 }
+                debouncedUpdate();
             } catch (error) {
                 console.error('Error en tiempo real (Peliculas):', error);
                 if (!moviesLoaded) { moviesLoaded = true; checkInitialLoad(); }
@@ -522,9 +531,8 @@ function loadMoviesFromFirebase() {
                 if (!seriesRtdbLoaded) {
                     seriesRtdbLoaded = true;
                     checkInitialLoad();
-                } else {
-                    debouncedUpdate();
                 }
+                debouncedUpdate();
             } catch (error) {
                 console.error('Error en tiempo real (Series RTDB):', error);
                 if (!seriesRtdbLoaded) { seriesRtdbLoaded = true; checkInitialLoad(); }
@@ -556,9 +564,8 @@ function loadMoviesFromFirebase() {
                 if (!seriesFirestoreLoaded) {
                     seriesFirestoreLoaded = true;
                     checkInitialLoad();
-                } else {
-                    debouncedUpdate();
                 }
+                debouncedUpdate();
             } catch (error) {
                 console.error('Error en tiempo real (Series Firestore):', error);
                 if (!seriesFirestoreLoaded) { seriesFirestoreLoaded = true; checkInitialLoad(); }
@@ -911,10 +918,14 @@ function displayAllSeriesPage() {
 }
 
 // Display category sections
+let categoryThrottle = null;
 function displayCategorySections() {
     if (!categoriasSections) return;
+    
+    // Cancelar cualquier proceso anterior
+    if (categoryThrottle) cancelAnimationFrame(categoryThrottle);
+    
     categoriasSections.innerHTML = '';
-
     let index = 0;
 
     function processNextBatch() {
@@ -946,7 +957,6 @@ function displayCategorySections() {
                 section.innerHTML = `
                     <div class="section-header">
                         <h2 class="section-title">${category}</h2>
-                        <a href="#${category.toLowerCase().replace(/\s+/g, '-')}" class="view-all">Ver todo</a>
                     </div>
                     <div class="movies-row-container">
                         <div class="movies-row" id="movies-${category.toLowerCase().replace(/\s+/g, '-')}"></div>
@@ -972,11 +982,13 @@ function displayCategorySections() {
         }
 
         if (index < mainCategories.length) {
-            requestAnimationFrame(processNextBatch);
+            categoryThrottle = requestAnimationFrame(processNextBatch);
+        } else {
+            categoryThrottle = null;
         }
     }
 
-    requestAnimationFrame(processNextBatch);
+    categoryThrottle = requestAnimationFrame(processNextBatch);
 }
 
 // Create movie card (TMDB Style)

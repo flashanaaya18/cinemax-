@@ -9,7 +9,9 @@ serviceAccountKey.json
 firebase-config.js
 secrets.json
 .env
-*.env
+.env.local
+node_modules/
+dist/
 auth.js
 
 # Large files

@@ -50,7 +50,7 @@
     .movie-card:hover { transform: translateY(-6px); }
     .card-img-wrap { aspect-ratio: 2/3; border-radius: var(--r); overflow: hidden; background: var(--card); border: 1px solid var(--border); position: relative; }
     .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .card-name { font-size: 0.85rem; font-weight: 600; margin-top: 10px; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-name { font-size: 0.85rem; font-weight: 600; margin-top: 10px; color: #fff; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
     /* Detail / Player Modals same as index */
     #detailPanel { position: fixed; inset: 0; z-index: 600; background: var(--bg); transform: translateX(100%); transition: transform 0.35s ease-in-out; overflow-y: auto; }
@@ -127,7 +127,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<script src="app.js"></script>
+<script type="module" src="app.js"></script>
 
 <script>
   let currentCat = 'Acción';
