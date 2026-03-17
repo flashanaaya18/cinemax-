@@ -1399,8 +1399,8 @@
       <div class="left-hdr">
         <a href="index.html" class="logo">Cine<span>Max+</span></a>
         <nav class="nav-items">
-          <a href="descarga.html">descargar la app</a>
-      </div>
+          <a href="descarga.html" class="btn-main" style="padding: 7px 15px; background: var(--blue); color: #000; border-radius: 20px;"><i class="fas fa-download"></i> Instalar App</a>
+        </nav>
       <div class="search-wrap">
         <i class="fas fa-search"></i>
         <input type="text" id="searchInput" placeholder="Buscar películas, series..." autocomplete="off">
@@ -1411,13 +1411,16 @@
 
   <!-- ════════════ HERO BANNER ════════════ -->
   <section class="hero-banner">
-    <h1>Bienvenido a <span>CineMax+</span></h1>
-    <p>Tu catálogo gratuito con todas las películas y series. Descubre, explora y disfruta sin límites.</p>
-    <div class="stats-row">
+    <h1>Descubre tu Próxima <span>Historia</span></h1>
+    <p>Explora el catálogo más completo de películas y series en HD. Toda la información que necesitas en un solo lugar.</p>
+    <div class="stats-row" style="margin-bottom: 2rem;">
       <div class="stat-chip"><i class="fas fa-film"></i> <span id="statMovies">—</span> Películas</div>
       <div class="stat-chip"><i class="fas fa-tv"></i> <span id="statSeries">—</span> Series</div>
-      <div class="stat-chip"><i class="fas fa-star"></i> Todo en HD</div>
+      <div class="stat-chip"><i class="fas fa-globe"></i> Multi-idioma</div>
     </div>
+    <a href="descarga.html" class="btn-main" style="display:inline-flex; margin-top:1rem; font-size:1.1rem; padding: 14px 32px;">
+      <i class="fas fa-mobile-alt"></i> Descargar App para Ver
+    </a>
   </section>
 
   <!-- ════════════ MAIN CONTENT ════════════ -->
@@ -1555,22 +1558,7 @@
   </div>
 
   <!-- ════════════ PLAYER MODAL ════════════ -->
-  <div id="playerModal">
-    <div class="player-box">
-      <div class="player-hdr">
-        <h3 id="playerTitle"></h3>
-        <div style="display:flex;gap:10px;align-items:center;">
-          <a id="externalPlayerBtn" href="#" target="_blank" class="btn-external" title="Abrir en ventana externa">
-            <i class="fas fa-external-link-alt"></i>
-          </a>
-          <button class="player-close" onclick="closePlayer()"><i class="fas fa-times"></i></button>
-        </div>
-      </div>
-      <div class="player-frame">
-        <iframe id="mainPlayer" src="" allow="autoplay; fullscreen" referrerpolicy="no-referrer-when-downgrade" style="width:100%;height:100%;border:none;"></iframe>
-      </div>
-    </div>
-  </div>
+  <!-- Player Modal Removed (Landing Version) -->
 
   <!-- ════════════ TELEGRAM POPUP ════════════ -->
   <div class="tg-popup" id="tgPopup">
@@ -1597,19 +1585,14 @@
     <div id="movieModal"><button id="closeMovieModal"></button>
       <div id="movieModalBody"></div>
     </div>
-    <div id="videoModal">
-      <h2 id="videoModalTitle"></h2>
-      <button id="closeVideoModal"></button>
-      <iframe id="videoPlayer" src="" allow="autoplay; fullscreen" style="width:100%;height:100%;border:none;"></iframe>
-      <div id="languageSelection"></div>
-    </div>
+    <!-- Video Modal Disabled -->
     <div id="downloadInfoModal"><button id="closeDownloadInfoModal"></button></div>
     <div id="estrenosMovies"></div>
     <div id="allSeriesGrid"></div>
     <div id="mainSeriesContent"></div>
     <div id="recentMovies"></div>
-    <div id="continueWatchingSection"></div>
-    <div id="continueWatchingRow"></div>
+    <div id="continueWatchingSection" style="display:none !important;"></div>
+    <div id="continueWatchingRow" style="display:none !important;"></div>
     <div id="tendencias"></div>
   </div>
 
@@ -1739,19 +1722,28 @@
 
         let sc = '#db2360'; if (rating >= 70) sc = '#21d07a'; else if (rating >= 40) sc = '#d2d531';
 
-        /* Watch buttons */
-        let watchHtml = '';
-        if (isSerie) {
-          watchHtml = `<span class="btn-ghost" style="cursor:default;"><i class="fas fa-tv"></i> ${numSeas} Temporada${numSeas !== 1 ? 's' : ''}</span>`;
-        } else {
-          const esp = movie.español || movie.url || '';
-          const lat = movie.latino || '';
-          const sub = movie.subtitulado || '';
-          if (esp) watchHtml += `<button class="btn-main" onclick="playVideo('${esp}','${encodeURIComponent(title)} — Español','${movie.id}')"><i class="fas fa-play"></i> Español</button>`;
-          if (lat) watchHtml += `<button class="btn-main lat" onclick="playVideo('${lat}','${encodeURIComponent(title)} — Latino','${movie.id}')"><i class="fas fa-play"></i> Latino</button>`;
-          if (sub) watchHtml += `<button class="btn-ghost" onclick="playVideo('${sub}','${encodeURIComponent(title)} — Sub','${movie.id}')"><i class="fas fa-closed-captioning"></i> Subtitulado</button>`;
-          if (!esp && !lat && !sub) watchHtml = `<span class="btn-ghost" style="cursor:default;"><i class="fas fa-clock"></i> Próximamente</span>`;
-        }
+        /* Info Section */
+        const esp = movie.español || movie.url || '';
+        const lat = movie.latino || '';
+        const sub = movie.subtitulado || '';
+        
+        let languagesHtml = '';
+        if (esp) languagesHtml += `<span class="dp-tag hl"><i class="fas fa-check"></i> Español (Castellano)</span>`;
+        if (lat) languagesHtml += `<span class="dp-tag hl"><i class="fas fa-check"></i> Español (Latino)</span>`;
+        if (sub) languagesHtml += `<span class="dp-tag hl"><i class="fas fa-check"></i> Subtitulado</span>`;
+
+        let watchHtml = `
+          <div style="margin-bottom: 1.5rem;">
+            <p class="dp-label" style="font-size:0.85rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Idiomas Disponibles en la App:</p>
+            <div class="dp-tags" style="margin-top:0.5rem;">
+              ${languagesHtml || '<span class="dp-tag">Próximamente</span>'}
+            </div>
+          </div>
+          <a href="descarga.html" class="btn-main" style="width:100%; justify-content:center; padding:15px; font-size:1.1rem; border-radius:12px; background: linear-gradient(to right, #f5c518, #ff9800);">
+            <i class="fas fa-download"></i> INSTALAR APP PARA VER
+          </a>
+          <p style="font-size: 0.75rem; color: var(--dim); margin-top: 10px; text-align: center;">Versión Premium disponible solo en Android</p>
+        `;
 
         /* Cast */
         const castHtml = cast.length ? `
@@ -1764,13 +1756,38 @@
         </div>`).join('')}
       </div>` : '';
 
-        /* Seasons section */
+        /* Seasons section summary (Landing Version) */
+        const episodesCount = tmdb?.number_of_episodes || (seasonsData ? Object.values(seasonsData).reduce((total, s) => total + (s.episodios ? Object.keys(s.episodios).length : 0), 0) : 0);
+        
         const seasonsHtml = isSerie ? `
-      <p class="dp-label" style="margin-top:1.5rem;">Temporadas y Episodios</p>
-      <div class="seasons-area">
-        <div class="s-tabs" id="sTabs"></div>
-        <div class="eps-grid" id="epsGrid"><div class="loader"><div class="spinner"></div></div></div>
-      </div>` : '';
+        <div class="dp-serie-summary" style="margin-top:2rem; padding:1.5rem; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid var(--border); display:flex; gap:2rem; align-items:center;">
+          <div style="text-align:center; flex:1;">
+            <div style="font-size:1.8rem; font-weight:900; color:var(--blue);">${numSeas}</div>
+            <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Temporadas</div>
+          </div>
+          <div style="width:1px; height:40px; background:var(--border);"></div>
+          <div style="text-align:center; flex:1;">
+            <div style="font-size:1.8rem; font-weight:900; color:var(--blue);">${episodesCount || (numSeas * 10) + '+'}</div>
+            <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Episodios</div>
+          </div>
+        </div>` : '';
+
+        const appFeaturesHtml = `
+        <div class="app-features-box" style="margin-top:2.5rem; padding:2rem; background:linear-gradient(135deg, rgba(245,197,24,0.1), transparent); border-radius:15px; border:1px solid rgba(245,197,24,0.2);">
+          <p class="dp-label" style="color:var(--blue); font-size:1.1rem;"><i class="fas fa-mobile-alt"></i> La experiencia CineMax+ App</p>
+          <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.5rem;">Descarga la aplicación oficial para acceder a funciones premium exclusivas y disfrutar sin límites.</p>
+          <ul style="list-style:none; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:15px;">
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Calidad Ultra HD y 4K</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Descargas Offline</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Transmisión a Chromecast</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Sin publicidad molesta</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Favoritos sincronizados</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Modo Ahorro de Datos</b></li>
+          </ul>
+          <div style="margin-top:2rem; text-align:center;">
+             <a href="descarga.html" class="btn-main" style="display:inline-flex; width:auto; padding:12px 30px;">¡OBTENER LA APP AHORA!</a>
+          </div>
+        </div>`;
 
         /* Hero backdrop */
         const heroStyle = backdrop && !backdrop.includes('placeholder') ? `background-image:url('${backdrop}')` : '';
@@ -1802,11 +1819,11 @@
           <p class="dp-overview">${overview}</p>
           ${castHtml}
           ${seasonsHtml}
+          ${appFeaturesHtml}
         </div>
       </div>`;
 
-        /* Render seasons */
-        if (isSerie) renderSeasons(seasonsData, tmdb, movie);
+        /* Render removed for landing version */
 
       } catch (err) {
         content.innerHTML = `<div class="loader" style="min-height:50vh;"><p style="color:var(--muted)">Error al cargar. <button onclick="closeDetail()" style="color:var(--blue);background:none;border:none;cursor:pointer;">Volver</button></p></div>`;
@@ -1903,7 +1920,7 @@
           const safeTitle = etitle.replace(/'/g, "\\'");
 
           return `
-        <div class="ep-card" ${eurl ? `onclick="playVideo('${eurl}','${safeTitle}','${movie?.id || ''}')"` : ''}>
+        <div class="ep-card" onclick="window.location.href='descarga.html'">
           <div class="ep-thumb">
             ${hasImg
               ? `<img src="${thumb}" alt="${etitle}"
@@ -2015,39 +2032,12 @@
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDetail(); closePlayer(); } });
 
-    /* ════ PLAYER ════ */
-    window.playVideo = function (url, title) {
-      if (!url || !url.trim()) return;
-      
-      let finalUrl = url.trim();
-      
-      // Convertir YouTube links a Embed
-      if (finalUrl.includes('youtube.com/watch?v=')) {
-        const id = finalUrl.split('v=')[1]?.split('&')[0];
-        if (id) finalUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
-      } else if (finalUrl.includes('youtu.be/')) {
-        const id = finalUrl.split('youtu.be/')[1]?.split('?')[0];
-        if (id) finalUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
-      }
-
-      const modal = document.getElementById('playerModal');
-      const iframe = document.getElementById('mainPlayer');
-      const pt = document.getElementById('playerTitle');
-      const extBtn = document.getElementById('externalPlayerBtn');
-      
-      if (pt) pt.textContent = decodeURIComponent(title || '');
-      if (extBtn) extBtn.href = finalUrl;
-      
-      iframe.src = finalUrl;
-      modal.classList.add('open');
-      document.body.style.overflow = 'hidden';
+    /* ════ PLAYER DISABLED ════ */
+    window.playVideo = function () {
+      window.location.href = 'descarga.html';
     };
     window.closePlayer = function () {
-      const modal = document.getElementById('playerModal');
-      const iframe = document.getElementById('mainPlayer');
-      iframe.src = '';
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
+      // Disabled
     };
 
     /* ════ TELEGRAM ════ */
