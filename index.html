@@ -1010,6 +1010,106 @@
     }
 
     /* ════════════════════════════════════════
+       REQUEST SECTION
+    ════════════════════════════════════════ */
+    .request-section {
+      padding: 4rem 1rem;
+      background: linear-gradient(to bottom, transparent, var(--bg2));
+    }
+
+    .request-card {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+      border: 1px solid rgba(245, 197, 24, 0.2);
+      border-radius: 20px;
+      padding: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .request-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 150px; height: 150px;
+      background: var(--blue);
+      filter: blur(100px);
+      opacity: 0.1;
+      pointer-events: none;
+    }
+
+    .request-badge {
+      display: inline-block;
+      background: rgba(245, 197, 24, 0.1);
+      color: var(--blue);
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(245, 197, 24, 0.3);
+    }
+
+    .request-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .request-text {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .btn-request {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--blue);
+      color: #000;
+      padding: 1rem 2.5rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(245, 197, 24, 0.2);
+    }
+
+    .btn-request:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(245, 197, 24, 0.3);
+      filter: brightness(1.1);
+    }
+
+    .request-visual {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 4rem;
+      color: var(--blue);
+      opacity: 0.2;
+    }
+
+    @media (max-width: 768px) {
+      .request-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+      }
+      .request-title { font-size: 1.8rem; }
+      .request-visual { display: none; }
+    }
+
+    /* ════════════════════════════════════════
        PLAYER MODAL
     ════════════════════════════════════════ */
     #playerModal {
@@ -1385,6 +1485,26 @@
 
     <!-- Categorías dinámicas de app.js -->
     <div id="categorias-sections"></div>
+
+    <!-- Sección de Pedidos -->
+    <section class="request-section">
+      <div class="container">
+        <div class="request-card">
+          <div class="request-content">
+            <div class="request-badge">SERVICIO EXCLUSIVO</div>
+            <h2 class="request-title">¿No encuentras lo que buscas?</h2>
+            <p class="request-text">Únete a nuestra comunidad en Telegram para pedir tus películas y series favoritas. ¡Subimos tus pedidos en tiempo récord!</p>
+            <a href="https://t.me/+E7lcEA9LbBgyZmI5" target="_blank" class="btn-request">
+              <i class="fab fa-telegram-plane"></i> Realizar Pedido
+            </a>
+          </div>
+          <div class="request-visual">
+            <i class="fas fa-film"></i>
+            <i class="fas fa-plus"></i>
+          </div>
+        </div>
+      </div>
+    </section>
 
   </div><!-- /content -->
 
