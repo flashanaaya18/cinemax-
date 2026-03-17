@@ -213,10 +213,13 @@
   <div class="player-box">
     <div class="player-hdr">
       <h3 id="playerTitle"></h3>
-      <button class="player-close" onclick="closePlayer()"><i class="fas fa-times"></i></button>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <a id="externalPlayerBtn" href="#" target="_blank" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;"><i class="fas fa-external-link-alt"></i></a>
+        <button class="player-close" onclick="closePlayer()"><i class="fas fa-times"></i></button>
+      </div>
     </div>
     <div class="player-frame">
-      <iframe id="mainPlayer" src="" allow="autoplay; fullscreen" style="width:100%;height:100%;border:none;"></iframe>
+      <iframe id="mainPlayer" src="" allow="autoplay; fullscreen" referrerpolicy="no-referrer-when-downgrade" style="width:100%;height:100%;border:none;"></iframe>
     </div>
   </div>
 </div>
@@ -403,6 +406,9 @@
       if (id) finalUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
     }
     document.getElementById('playerTitle').textContent = decodeURIComponent(title || '');
+    const extBtn = document.getElementById('externalPlayerBtn');
+    if (extBtn) extBtn.href = finalUrl;
+    
     document.getElementById('mainPlayer').src = finalUrl;
     document.getElementById('playerModal').classList.add('open');
     document.body.style.overflow = 'hidden';
