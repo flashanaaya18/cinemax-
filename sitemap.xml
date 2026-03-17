@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pelixplushdz.netlify.app/</loc>
+    <loc>https://cinemax-plus.vercel.app/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pelixplushdz.netlify.app/ver.html?id=c-mo-entrenar-a-tu-drag-n-2025-1087192</loc>
+    <loc>https://cinemax-plus.vercel.app/series.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pelixplushdz.netlify.app/ver.html?id=pillion-2025-1287141</loc>
+    <loc>https://cinemax-plus.vercel.app/categorias.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cinemax-plus.vercel.app/estrenos.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://cinemax-plus.vercel.app/tendencias.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
 </urlset>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pelixplushdz.netlify.app/sitemap.xml
+Sitemap: https://cinemax-plus.vercel.app/sitemap.xml
