@@ -135,15 +135,22 @@ window.rtdb = rtdb;
     document.addEventListener('contextmenu', (e) => e.preventDefault());
 })();
 
-// Enable Firestore Offline Persistence
+// Enable Firestore Offline Persistence with modern settings to avoid warnings
 if (db) {
-    db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
-        if (err.code == 'failed-precondition') {
-            console.warn('Persistencia fallida: Múltiples pestañas abiertas');
-        } else if (err.code == 'unimplemented') {
-            console.warn('Persistencia no soportada por el navegador');
-        }
-    });
+    try {
+        db.settings({ 
+            cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
+        });
+        db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
+            if (err.code == 'failed-precondition') {
+                console.warn('Persistencia fallida: Múltiples pestañas abiertas');
+            } else if (err.code == 'unimplemented') {
+                console.warn('Persistencia no soportada por el navegador');
+            }
+        });
+    } catch (e) {
+        console.warn("Error configurando persistencia:", e);
+    }
 }
 
 // DOM Elements
@@ -665,7 +672,7 @@ function processSerieData(id, data) {
         fondo: fixImageUrl(data.fondo || data.backdrop_path || data.portada || data.poster || data.imagen || '', 'original'),
         poster: fixImageUrl(data.portada || data.poster || data.poster_path || data.imagen || 'https://via.placeholder.com/300x450?text=CineMax+'),
         rating: parseFloat(data.rating) || 0,
-        sinopsis: data.sinopsis || data.overview || 'Sin descripción disponible.',
+        sinopsis: data.sisposesis || data.sinopsis || data.overview || 'Sin descripción disponible.',
         latino: data.latino || '',
         subtitulado: data.subtitulado || '',
         tendencias: data.tendencias || false,
