@@ -23,9 +23,15 @@ Una plataforma de streaming moderna, elegante y ultra rápida diseñada para ofr
 
 ## ⬇️ Descarga la App
 
-Lleva CineMax+ a donde quieras:
-- [Descargar para Android](descarga.html)
-- [Descargar para Windows](descarga.html)
+Lleva CineMax+ a donde quieras. Hemos optimizado nuestras versiones para que funcionen perfectamente en cualquier dispositivo Android:
+
+### 📦 Versiones de Android (APK)
+- **[CineMax+ Normal (Universal)](cinemax+.apk):** La versión recomendada para la mayoría. Incluye todas las librerías necesarias para funcionar en cualquier dispositivo ARM. Es la opción más segura si no conoces la arquitectura de tu móvil.
+- **[CineMax+ 64 bits (ARM64-v8a)](cinemax+64.apk):** Optimizada para teléfonos modernos de gama media y alta. Ofrece un rendimiento superior, menor consumo de batería y mayor estabilidad en dispositivos con arquitecturas de 64 bits.
+- **[CineMax+ 86 bits (X86/X86_64)](cinemax+86.apk):** Diseñada específicamente para emuladores de Android en PC (como BlueStacks o LDPlayer) y dispositivos ChromeOS o tablets con procesadores Intel/AMD.
+
+### 💻 Otras Plataformas
+- **[CineMax+ Desktop (Windows)](cinemax+.zip):** Nuestra versión portable para PC. Solo descarga, extrae y disfruta del cine en pantalla grande sin instalaciones complicadas.
 
 ---
 Diseñado con ❤️ por **CineMax+ Team**

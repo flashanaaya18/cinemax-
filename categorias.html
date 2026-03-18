@@ -11,6 +11,7 @@
   <link rel="manifest" href="manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
 
   <style>
     /* ════════════════════════════════════════
@@ -22,7 +23,7 @@
       --card: #111; --card2: #1a1a1a; --txt: #fff; --muted: #94a3b8;
       --dim: #4b5563; --border: rgba(245,197,24,0.12); --r: 10px;
     }
-    body { background: var(--bg); color: var(--txt); font-family: 'Outfit', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    body { background: #000000; color: var(--txt); font-family: 'Outfit', sans-serif; min-height: 100vh; overflow-x: hidden; }
     ::-webkit-scrollbar { width: 5px; background: #111; }
     ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
 
@@ -34,8 +35,9 @@
     .nav-items a { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
     .nav-items a:hover { color: #fff; }
 
-    .hero-mini { padding: 100px 1.5rem 40px; background: linear-gradient(160deg, #0d0d00 0%, #000 65%); text-align: center; border-bottom: 1px solid var(--border); }
-    .hero-mini h1 { font-size: 2.22rem; font-weight: 900; }
+    .hero-mini { padding: 120px 1.5rem 50px; background: #000 url('hero-bg.png') no-repeat center center / cover; text-align: center; border-bottom: 2px solid var(--blue); position: relative; }
+    .hero-mini::before { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.7); pointer-events: none; }
+    .hero-mini h1 { position: relative; z-index: 1; font-size: 2.22rem; font-weight: 900; }
 
     .content { max-width: 1440px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
     .cat-tabs { display: flex; gap: 0.8rem; overflow-x: auto; padding-bottom: 2rem; scrollbar-width: none; }

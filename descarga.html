@@ -1,422 +1,415 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Descargar CineMax+ | App para Android y Windows</title>
-  <meta name="description" content="Descarga la app oficial de CineMax+ para Android o Windows y disfruta de películas y series en HD sin límites.">
-  <meta name="theme-color" content="#f5c518">
-  <link rel="icon" type="image/png" href="Icon-192.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargar CineMax - Android & Windows | CineMax+ Premium</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="Descarga la aplicación oficial de CineMax para Android y Windows. Disfruta de películas y series en 4K, sin anuncios y con la mejor experiencia premium.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#ffd700">
+    <link rel="icon" type="image/png" href="Icon-192.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Descargar CineMax App">
+    <meta property="og:description" content="Lleva la mejor experiencia de streaming a todos tus dispositivos. APK para Android y ZIP para Windows.">
+    <meta property="og:image" content="cinemax+1.png">
+    <meta property="og:url" content="https://pelixplushdz.netlify.app/descargar.html">
 
-  <style>
-    /* ── RESET ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* CineMax+ Ultra-Premium Download System */
+        :root {
+            --primary: #f5c518;
+            --primary-light: #ffdf64;
+            --primary-glow: rgba(245, 197, 24, 0.2);
+            --bg: #000000;
+            --bg-card: #0a0a0a;
+            --glass: rgba(10, 10, 10, 0.7);
+            --glass-border: rgba(245, 197, 24, 0.15);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --text-dim: #4b5563;
+            --radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
 
-    :root {
-      --gold:    #f5c518;
-      --gold2:   #e6b800;
-      --gold3:   #ffd93d;
-      --bg:      #000000;
-      --bg2:     #0a0a0a;
-      --card:    #111111;
-      --card2:   #1a1a1a;
-      --border:  rgba(245,197,24,0.15);
-      --txt:     #ffffff;
-      --muted:   #9ca3af;
-      --dim:     #4b5563;
-    }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--txt);
-      font-family: 'Outfit', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+        }
 
-    /* ── HEADER ── */
-    header {
-      position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-      background: rgba(0,0,0,0.96);
-      border-bottom: 1px solid rgba(245,197,24,0.15);
-      backdrop-filter: blur(14px);
-      z-index: 100;
-      display: flex; align-items: center;
-    }
-    .hdr { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; width: 100%; display: flex; align-items: center; justify-content: space-between; }
-    .logo { font-size: 1.5rem; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: -0.5px; }
-    .logo span { color: var(--gold); }
-    .back-link { display: flex; align-items: center; gap: 7px; color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
-    .back-link:hover { color: var(--gold); }
+        /* Background Ambient Glows */
+        .ambient-glow {
+            position: fixed;
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, rgba(245, 197, 24, 0.03) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            z-index: -1;
+            animation: floatGlow 20s infinite alternate ease-in-out;
+        }
 
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      padding: 80px 1.5rem 60px;
-      background: radial-gradient(ellipse at 50% -10%, rgba(245,197,24,0.14) 0%, transparent 60%), var(--bg);
-      position: relative; overflow: hidden; text-align: center;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f5c518' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      pointer-events: none;
-    }
+        @keyframes floatGlow {
+            0% { top: -20%; left: -20%; transform: scale(1); }
+            100% { top: 40%; left: 40%; transform: scale(1.2); }
+        }
 
-    .hero-content { position: relative; z-index: 2; max-width: 750px; }
+        /* Header Style */
+        #mainHeader {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+        }
 
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 7px;
-      background: rgba(245,197,24,0.1); border: 1px solid rgba(245,197,24,0.25);
-      color: var(--gold); border-radius: 50px; padding: 6px 18px;
-      font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-      margin-bottom: 1.8rem;
-    }
-    .hero h1 {
-      font-size: clamp(2.2rem, 6vw, 4rem);
-      font-weight: 900; line-height: 1.1; margin-bottom: 1.2rem; letter-spacing: -1.5px;
-    }
-    .hero h1 em { font-style: normal; color: var(--gold); }
-    .hero p {
-      font-size: 1.1rem; color: var(--muted); max-width: 560px; margin: 0 auto 3rem; line-height: 1.7;
-    }
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    /* ── DOWNLOAD CARDS ── */
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1.5rem; max-width: 780px; margin: 0 auto 3rem; }
+        .logo { font-size: 1.8rem; font-weight: 900; color: #fff; text-decoration: none; }
+        .logo span { color: var(--primary); }
 
-    .dcard {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 2rem 1.8rem;
-      display: flex; flex-direction: column; align-items: center; text-align: center;
-      transition: all 0.3s ease; position: relative; overflow: hidden;
-    }
-    .dcard::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .dcard:hover { border-color: rgba(245,197,24,0.4); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(245,197,24,0.08); }
-    .dcard:hover::before { opacity: 1; }
+        .nav-items { display: flex; gap: 2rem; align-items: center; }
+        .nav-items a { color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: var(--transition); }
+        .nav-items a:hover { color: var(--primary); }
 
-    .dcard-icon {
-      width: 72px; height: 72px; border-radius: 18px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.2rem; margin-bottom: 1.4rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-    }
-    .dcard h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.3rem; }
-    .dcard .ver { font-size: 0.8rem; color: var(--dim); margin-bottom: 1.5rem; }
+        /* Hero Section */
+        .download-hero {
+            padding: 180px 2rem 100px;
+            text-align: center;
+            position: relative;
+        }
 
-    .btn-dl {
-      width: 100%; padding: 13px; border-radius: 10px;
-      font-size: 1rem; font-weight: 700; border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 9px;
-      text-decoration: none; transition: all 0.22s; font-family: 'Outfit', sans-serif;
-      margin-bottom: 1.2rem;
-    }
-    .btn-android { background: linear-gradient(135deg, #3DDC84, #2eb56e); color: #000; box-shadow: 0 8px 24px rgba(61,220,132,0.3); }
-    .btn-android:hover { filter: brightness(1.1); transform: translateY(-1px); }
-    .btn-windows { background: linear-gradient(135deg, #0078D7, #005fa3); color: #fff; box-shadow: 0 8px 24px rgba(0,120,215,0.3); }
-    .btn-windows:hover { filter: brightness(1.15); transform: translateY(-1px); }
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            animation: fadeInDown 0.8s backwards;
+        }
 
-    .finfo { display: flex; gap: 1.2rem; color: var(--dim); font-size: 0.78rem; justify-content: center; }
-    .finfo span { display: flex; align-items: center; gap: 4px; }
-    .finfo i { color: var(--gold); }
+        .hero-title span { color: var(--primary); text-shadow: 0 0 30px rgba(245, 197, 24, 0.3); }
 
-    /* ── STATS ── */
-    .stats-row { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; margin-top: 2.5rem; }
-    .stat { text-align: center; }
-    .stat .num { font-size: 2rem; font-weight: 900; color: var(--gold); display: block; line-height: 1; }
-    .stat .lbl { font-size: 0.78rem; color: var(--dim); margin-top: 4px; }
+        .hero-desc {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            animation: fadeIn 1s 0.3s backwards;
+        }
 
-    /* ── STEPS SECTION ── */
-    .section { padding: 80px 1.5rem; max-width: 1100px; margin: 0 auto; }
-    .section-title { text-align: center; font-size: clamp(1.6rem,3.5vw,2.4rem); font-weight: 900; margin-bottom: 0.8rem; letter-spacing: -0.5px; }
-    .section-title span { color: var(--gold); }
-    .section-sub { text-align: center; color: var(--muted); font-size: 1rem; margin-bottom: 3.5rem; }
+        /* Cards Grid */
+        .cards-section {
+            padding-bottom: 100px;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 1.5rem 100px;
+        }
 
-    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 2rem; }
-    .step { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.8rem 1.4rem; text-align: center; transition: border-color 0.2s; }
-    .step:hover { border-color: rgba(245,197,24,0.35); }
-    .step-num { width: 44px; height: 44px; border-radius: 50%; background: var(--gold); color: #000; font-size: 1.1rem; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.1rem; }
-    .step h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .step p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
 
-    /* ── SCREENSHOTS SECTION ── */
-    .screenshots-section { padding: 80px 1.5rem; background: var(--bg2); }
-    .screenshots-wrap { max-width: 1000px; margin: 0 auto; }
-    .screens-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3.5rem; }
-    .screen-card { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); background: var(--card2); transition: transform 0.3s; }
-    .screen-card:hover { transform: scale(1.03) translateY(-6px); }
-    .screen-card img { width: 100%; display: block; }
+        .download-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            animation: fadeInUp 0.8s backwards;
+        }
 
-    /* ── FEATURES ── */
-    .features-section { padding: 80px 1.5rem; max-width: 1100px; margin: 0 auto; }
-    .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1.4rem; }
-    .feat {
-      background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem;
-      display: flex; gap: 1rem; align-items: flex-start; transition: border-color 0.2s;
-    }
-    .feat:hover { border-color: rgba(245,197,24,0.3); }
-    .feat-icon { width: 44px; height: 44px; background: rgba(245,197,24,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.1rem; flex-shrink: 0; }
-    .feat-body h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; }
-    .feat-body p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+        .download-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px var(--primary-glow);
+        }
 
-    /* ── CTA SECTION ── */
-    .cta-section { padding: 80px 1.5rem; text-align: center; }
-    .cta-box {
-      background: linear-gradient(135deg, #111 0%, #0d0d0d 100%);
-      border: 1px solid rgba(245,197,24,0.2);
-      border-radius: 20px; padding: 4rem 2rem;
-      max-width: 700px; margin: 0 auto;
-      position: relative; overflow: hidden;
-    }
-    .cta-box::before {
-      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(ellipse at center, rgba(245,197,24,0.06) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .cta-box h2 { font-size: clamp(1.6rem,3vw,2.2rem); font-weight: 900; margin-bottom: 0.8rem; }
-    .cta-box h2 span { color: var(--gold); }
-    .cta-box p { color: var(--muted); margin-bottom: 2rem; font-size: 1rem; }
-    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .btn-gold { padding: 12px 28px; background: var(--gold); color: #000; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none; font-family: 'Outfit', sans-serif; transition: all 0.2s; }
-    .btn-gold:hover { background: var(--gold3); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(245,197,24,0.3); }
-    .btn-outline { padding: 12px 28px; background: transparent; color: var(--gold); border: 1px solid rgba(245,197,24,0.4); border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none; font-family: 'Outfit', sans-serif; transition: all 0.2s; }
-    .btn-outline:hover { background: rgba(245,197,24,0.08); border-color: var(--gold); }
+        .download-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, rgba(245, 197, 24, 0.05), transparent 60%);
+            z-index: -1;
+        }
 
-    /* ── FOOTER ── */
-    footer { background: #000; border-top: 1px solid rgba(245,197,24,0.1); padding: 2.5rem 1.5rem 1.5rem; text-align: center; }
-    footer .logo { display: inline-block; margin-bottom: 1rem; }
-    footer p { color: var(--dim); font-size: 0.8rem; }
-    footer .ft-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; }
-    footer .ft-links a { color: var(--dim); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
-    footer .ft-links a:hover { color: var(--gold); }
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(245, 197, 24, 0.1);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(245, 197, 24, 0.2);
+        }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 640px) {
-      .screens-grid { grid-template-columns: 1fr; }
-      .steps { grid-template-columns: 1fr 1fr; }
-      .stats-row { gap: 1.5rem; }
-    }
-    @media (max-width: 480px) {
-      .steps { grid-template-columns: 1fr; }
-    }
-  </style>
+        .card-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 1rem; }
+        .card-desc { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; flex-grow: 1; }
+
+        .dl-btn {
+            background: var(--primary);
+            color: #000;
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        .dl-btn:hover {
+            background: var(--primary-light);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px var(--primary-glow);
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 1.2rem;
+        }
+
+        .spec-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #fff; }
+        .spec-item i { color: var(--primary); width: 16px; }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-items { display: none; }
+            .hero-title { font-size: 3rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            background: #050505;
+        }
+    </style>
 </head>
+
 <body>
+    <div class="ambient-glow"></div>
 
-<!-- ╔═══ HEADER ═══╗ -->
-<header>
-  <div class="hdr">
-    <a href="index.html" class="logo">Cine<span>Max+</span></a>
-    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al catálogo</a>
-  </div>
-</header>
-
-<!-- ╔═══ HERO ═══╗ -->
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-badge"><i class="fas fa-bolt"></i> Versión más reciente disponible</div>
-    <h1>Tu cine favorito,<br><em>en todos tus dispositivos</em></h1>
-    <p>Descarga CineMax+ y lleva miles de películas y series a tu Android, Smart TV o PC con Windows. Gratis, sin anuncios molestos.</p>
-
-    <!-- DOWNLOAD CARDS -->
-    <div class="cards">
-
-      <!-- ANDROID -->
-      <div class="dcard">
-        <div class="dcard-icon" style="background: linear-gradient(135deg,#3DDC84,#1e9e57);">
-          <i class="fab fa-android" style="color:#000;"></i>
+    <header id="mainHeader">
+        <div class="header-container">
+            <a href="index.html" class="logo">Cine<span>Max+</span></a>
+            <nav class="nav-items">
+                <a href="index.html">Inicio</a>
+                <a href="series.html">Series</a>
+                <a href="categorias.html">Categorías</a>
+                <a href="index.html" style="background: var(--primary); color: #000; padding: 8px 20px; border-radius: 30px; font-weight: 700;">Volver</a>
+            </nav>
         </div>
-        <h3>Android / Smart TV</h3>
-        <p class="ver">APK · Versión 3.5.2</p>
-        <a href="cinemax+.apk" download class="btn-dl btn-android">
-          <i class="fas fa-cloud-download-alt"></i> Descargar APK
-        </a>
-        <div class="finfo">
-          <span><i class="fas fa-hdd"></i> 84.6 MB</span>
-          <span><i class="fas fa-shield-alt"></i> Seguro</span>
-          <span><i class="fas fa-mobile-alt"></i> Android 6+</span>
-        </div>
-      </div>
+    </header>
 
-      <!-- WINDOWS -->
-      <div class="dcard">
-        <div class="dcard-icon" style="background: linear-gradient(135deg,#0078D7,#005fa3);">
-          <i class="fab fa-windows" style="color:#fff;"></i>
-        </div>
-        <h3>Windows PC</h3>
-        <p class="ver">ZIP · Escritorio</p>
-        <a href="cinemax+.zip" download class="btn-dl btn-windows">
-          <i class="fas fa-file-archive"></i> Descargar ZIP
-        </a>
-        <div class="finfo">
-          <span><i class="fas fa-hdd"></i> 24.1 MB</span>
-          <span><i class="fas fa-shield-alt"></i> Seguro</span>
-          <span><i class="fab fa-windows"></i> Win 10/11</span>
-        </div>
-      </div>
+    <main>
+        <section class="download-hero">
+            <h1 class="hero-title">Tu Cine, sin limites. <span>Estés donde estés.</span></h1>
+            <p class="hero-desc">Descarga las versiones optimizadas de CineMax+ para tu dispositivo. Estabilidad, velocidad y calidad 4K garantizada en cada arquitectura.</p>
+            
+            <!-- Global Stats Row -->
+            <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-top: 2rem; animation: fadeIn 1.2s 0.5s backwards;">
+                <div style="text-align: center;"><span style="display: block; font-size: 2.2rem; font-weight: 900; color: var(--primary);">50K+</span><span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Descargas</span></div>
+                <div style="text-align: center;"><span style="display: block; font-size: 2.2rem; font-weight: 900; color: var(--primary);">4.9/5</span><span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Valoración</span></div>
+                <div style="text-align: center;"><span style="display: block; font-size: 2.2rem; font-weight: 900; color: var(--primary);">100%</span><span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Gratis</span></div>
+            </div>
+        </section>
 
-    </div>
+        <section class="cards-section">
+            <div class="cards-grid">
+                <!-- NORMAL APK -->
+                <div class="download-card" style="animation-delay: 0.2s;">
+                    <div class="card-icon"><i class="fab fa-android"></i></div>
+                    <h2 class="card-title">CineMax+ Universal</h2>
+                    <p class="card-desc">La versión más compatible. Recomendada si no conoces la arquitectura de tu teléfono o para dispositivos más antiguos.</p>
+                    <a href="cinemax.apk" download class="dl-btn">
+                        <i class="fas fa-download"></i> Descargar APK
+                    </a>
+                    <div class="specs-grid">
+                        <div class="spec-item"><i class="fas fa-microchip"></i> ARM Univ.</div>
+                        <div class="spec-item"><i class="fas fa-file-alt"></i> 88.7 MB</div>
+                        <div class="spec-item"><i class="fas fa-shield-alt"></i> Verificado</div>
+                        <div class="spec-item"><i class="fas fa-layer-group"></i> Android 5.0+</div>
+                    </div>
+                </div>
 
-    <!-- STATS -->
-    <div class="stats-row">
-      <div class="stat"><span class="num">50K+</span><div class="lbl">Descargas</div></div>
-      <div class="stat"><span class="num">4.8<i class="fas fa-star" style="font-size:.9rem;color:var(--gold);margin-left:3px;"></i></span><div class="lbl">Valoración</div></div>
-      <div class="stat"><span class="num">HD</span><div class="lbl">Calidad</div></div>
-      <div class="stat"><span class="num">100%</span><div class="lbl">Gratis</div></div>
-    </div>
-  </div>
-</section>
+                <!-- 64 BIT APK -->
+                <div class="download-card" style="animation-delay: 0.4s; border-color: rgba(245, 197, 24, 0.3);">
+                    <div class="card-icon" style="background: rgba(33, 208, 122, 0.1); color: #21d07a;"><i class="fas fa-bolt"></i></div>
+                    <h2 class="card-title">CineMax+ 64 bits</h2>
+                    <p class="card-desc">Máximo rendimiento para dispositivos modernos. Cargas más rápidas y optimización de batería superior (ARM64-v8a).</p>
+                    <a href="cinemax+64.apk" download class="dl-btn" style="background: #21d07a;">
+                        <i class="fas fa-rocket"></i> Versión ARM64
+                    </a>
+                    <div class="specs-grid">
+                        <div class="spec-item"><i class="fas fa-microchip"></i> ARM64-v8a</div>
+                        <div class="spec-item"><i class="fas fa-file-alt"></i> 85.2 MB</div>
+                        <div class="spec-item"><i class="fas fa-shield-alt"></i> Pro Speed</div>
+                        <div class="spec-item"><i class="fas fa-layer-group"></i> Android 8.0+</div>
+                    </div>
+                </div>
 
-<!-- ╔═══ INSTALLATION STEPS ═══╗ -->
-<section style="padding: 80px 1.5rem; background: var(--bg2);">
-  <div style="max-width:1100px;margin:0 auto;">
-    <h2 class="section-title">Cómo <span>instalar</span></h2>
-    <p class="section-sub">Sigue estos simples pasos y disfruta en minutos</p>
+                <!-- 86 BIT APK -->
+                <div class="download-card" style="animation-delay: 0.6s;">
+                    <div class="card-icon" style="background: rgba(0, 120, 215, 0.1); color: #0078D7;"><i class="fas fa-desktop"></i></div>
+                    <h2 class="card-title">CineMax+ PC & Sim</h2>
+                    <p class="card-desc">Diseñada para emuladores de PC (BlueStacks, LDPlayer) y procesadores Intel/AMD. Estabilidad total en computadoras.</p>
+                    <a href="cinemax+86.apk" download class="dl-btn" style="background: #0078D7; color:#fff;">
+                        <i class="fas fa-display"></i> Versión X86_64
+                    </a>
+                    <div class="specs-grid">
+                        <div class="spec-item"><i class="fas fa-microchip"></i> X86 / 64 Intel</div>
+                        <div class="spec-item"><i class="fas fa-file-alt"></i> 92.1 MB</div>
+                        <div class="spec-item"><i class="fas fa-shield-alt"></i> Estable</div>
+                        <div class="spec-item"><i class="fas fa-layer-group"></i> Emuladores</div>
+                    </div>
+                </div>
+            </div>
 
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;max-width:800px;margin:0 auto 3rem;">
+            <!-- Windows Section -->
+            <div style="margin-top: 4rem; background: var(--bg-card); border-radius: 20px; padding: 3rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; border: 1px solid var(--glass-border); animation: fadeInUp 0.8s 0.8s backwards;">
+                <div style="display: flex; align-items: center; gap: 2rem;">
+                    <div style="font-size: 3.5rem; color: #fff;"><i class="fab fa-windows"></i></div>
+                    <div style="text-align: left;">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">CineMax+ para Windows</h3>
+                        <p style="color: var(--text-muted);">Disfruta del cine en pantalla grande con nuestra versión Desktop portable.</p>
+                    </div>
+                </div>
+                <a href="cinemax+.zip" download class="dl-btn" style="width: auto; padding: 1rem 2.5rem; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 0;">
+                    Descargar ZIP
+                </a>
+            </div>
+        </section>
 
-      <!-- Android steps -->
-      <div>
-        <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1.2rem;display:flex;align-items:center;gap:8px;">
-          <i class="fab fa-android" style="color:#3DDC84;"></i> Android
-        </h3>
-        <div class="steps" style="grid-template-columns:1fr;">
-          <div class="step">
-            <div class="step-num">1</div>
-            <h4>Descarga el APK</h4>
-            <p>Toca el botón de descarga de arriba.</p>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <h4>Habilita la instalación</h4>
-            <p>Activa <em>"Orígenes desconocidos"</em> en Ajustes → Seguridad.</p>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <h4>Instala y disfruta</h4>
-            <p>Abre el archivo descargado e instala. ¡Listo!</p>
-          </div>
-        </div>
-      </div>
+        <!-- Features Section -->
+        <section style="padding: 60px 2rem; max-width: 1300px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <div style="background: #0a0a0a; padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03);">
+                    <i class="fas fa-hd" style="color: var(--primary); font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                    <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Calidad Ultra HD</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Disfruta de tus contenidos en la resolución más alta disponible, sin esperas.</p>
+                </div>
+                <div style="background: #0a0a0a; padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03);">
+                    <i class="fas fa-ban" style="color: var(--primary); font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                    <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Sin Anuncios</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Experiencia fluida y limpia, enfocada totalmente en lo que quieres ver.</p>
+                </div>
+                <div style="background: #0a0a0a; padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03);">
+                    <i class="fas fa-sync" style="color: var(--primary); font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                    <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Actualización Continua</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Agregamos estrenos todos los días para que siempre tengas algo nuevo.</p>
+                </div>
+                <div style="background: #0a0a0a; padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03);">
+                    <i class="fas fa-tv" style="color: var(--primary); font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                    <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem;">TV Compatible</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Optimizado para Android TV, Chromecast y Fire TV sticks.</p>
+                </div>
+            </div>
+        </section>
 
-      <!-- Windows steps -->
-      <div>
-        <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1.2rem;display:flex;align-items:center;gap:8px;">
-          <i class="fab fa-windows" style="color:#0078D7;"></i> Windows
-        </h3>
-        <div class="steps" style="grid-template-columns:1fr;">
-          <div class="step">
-            <div class="step-num">1</div>
-            <h4>Descarga el ZIP</h4>
-            <p>Toca el botón de descarga Windows.</p>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <h4>Descomprime</h4>
-            <p>Extrae la carpeta en cualquier lugar de tu PC.</p>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <h4>Ejecuta CineMax.exe</h4>
-            <p>Abre el ejecutable y empieza a ver.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        <!-- Showcase Section -->
+        <section style="padding: 100px 2rem; max-width: 1400px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 3rem;">Diseño de <span>Vanguardia</span></h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem;">
+                <div style="border-radius: 30px; border: 8px solid #111; overflow: hidden; height: 550px; box-shadow: 0 30px 60px rgba(0,0,0,0.8);"><img src="cinemax+1.png" alt="Preview 1" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <div style="border-radius: 30px; border: 8px solid #111; overflow: hidden; height: 550px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); transform: translateY(40px);"><img src="cinema+2.png" alt="Preview 2" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                <div style="border-radius: 30px; border: 8px solid #111; overflow: hidden; height: 550px; box-shadow: 0 30px 60px rgba(0,0,0,0.8);"><img src="cinemax+3.png" alt="Preview 3" style="width: 100%; height: 100%; object-fit: cover;"></div>
+            </div>
+        </section>
 
-<!-- ╔═══ SCREENSHOTS ═══╗ -->
-<section class="screenshots-section">
-  <div class="screenshots-wrap">
-    <h2 class="section-title">Capturas de <span>pantalla</span></h2>
-    <p class="section-sub">Diseño elegante, oscuro y fácil de usar</p>
-    <div class="screens-grid">
-      <div class="screen-card"><img src="cinemax+1.png" alt="CineMax+ pantalla 1" onerror="this.parentElement.style.display='none'"></div>
-      <div class="screen-card" style="margin-top:30px;"><img src="cinema+2.png" alt="CineMax+ pantalla 2" onerror="this.parentElement.style.display='none'"></div>
-      <div class="screen-card"><img src="cinemax+3.png" alt="CineMax+ pantalla 3" onerror="this.parentElement.style.display='none'"></div>
-    </div>
-  </div>
-</section>
+        <!-- Instructions Panel -->
+        <section style="padding: 100px 2rem; max-width: 1100px; margin: 0 auto;">
+            <div style="background: linear-gradient(135deg, #0a0a0a, #000); border: 1px solid var(--glass-border); border-radius: 24px; padding: 4rem; text-align: center;">
+                <h2 style="color: var(--primary); font-size: 2rem; font-weight: 800; margin-bottom: 3rem;">¿Cómo instalar CineMax+?</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; text-align: left;">
+                    <div>
+                        <div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 1rem; font-weight: 800;">01. Permisos</div>
+                        <p style="color: var(--text-muted);">Habilita la instalación desde "Fuentes Desconocidas" en los ajustes de seguridad de tu Android.</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 1rem; font-weight: 800;">02. Instalación</div>
+                        <p style="color: var(--text-muted);">Ejecuta el archivo APK descargado y confirma la instalación pulsando "Instalar".</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 1.5rem; color: var(--primary); margin-bottom: 1rem; font-weight: 800;">03. Disfruta</div>
+                        <p style="color: var(--text-muted);">Inicia la app, elige tu película favorita y vive la experiencia premium.</p>
+                    </div>
+                </div>
+                <div style="margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Unete a nuestra comunidad para noticias y soporte</p>
+                    <a href="https://t.me/+E7lcEA9LbBgyZmI5" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px;">
+                        Comunidad oficial en Telegram <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
 
-<!-- ╔═══ FEATURES ═══╗ -->
-<section class="features-section">
-  <h2 class="section-title">¿Por qué <span>CineMax+</span>?</h2>
-  <p class="section-sub">Todo lo que necesitas en una sola app</p>
-  <div class="feat-grid">
-    <div class="feat">
-      <div class="feat-icon"><i class="fas fa-film"></i></div>
-      <div class="feat-body"><h4>Miles de títulos</h4><p>Accede a un catálogo enorme de películas y series actualizadas constantemente.</p></div>
-    </div>
-    <div class="feat">
-      <div class="feat-icon"><i class="fas fa-hd"></i></div>
-      <div class="feat-body"><h4>Calidad HD</h4><p>Disfruta de tus películas en la mejor calidad disponible, hasta 4K.</p></div>
-    </div>
-    <div class="feat">
-      <div class="feat-icon"><i class="fas fa-ban"></i></div>
-      <div class="feat-body"><h4>Sin anuncios molestos</h4><p>Bloqueador integrado para una experiencia limpia y sin interrupciones.</p></div>
-    </div>
-    <div class="feat">
-      <div class="feat-icon"><i class="fas fa-tv"></i></div>
-      <div class="feat-body"><h4>Smart TV compatible</h4><p>Optimizado para Android TV y Fire TV Stick con control remoto.</p></div>
-    </div>
-    <div class="feat">
-      <div class="feat-icon"><i class="fas fa-language"></i></div>
-      <div class="feat-body"><h4>Latino y Español</h4><p>Elige entre audio en Español, Latino, o versión subtitulada.</p></div>
-    </div>
-    <div class="feat">
-      <div class="feat-icon"><i class="fas fa-sync"></i></div>
-      <div class="feat-body"><h4>Actualización diaria</h4><p>Nuevo contenido agregado todos los días para que nunca te quedes sin ver.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ╔═══ CTA ═══╗ -->
-<section class="cta-section">
-  <div class="cta-box">
-    <h2>Únete a la <span>comunidad</span></h2>
-    <p>Pide tus películas favoritas, recibe avisos de nuevos estrenos y soporte técnico gratis en nuestro Telegram.</p>
-    <div class="cta-btns">
-      <a href="https://t.me/+E7lcEA9LbBgyZmI5" target="_blank" class="btn-gold">
-        <i class="fab fa-telegram-plane"></i> Unirse al Telegram
-      </a>
-      <a href="index.html" class="btn-outline">
-        <i class="fas fa-film"></i> Ver catálogo
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ╔═══ FOOTER ═══╗ -->
-<footer>
-  <a href="index.html" class="logo" style="text-decoration:none;">Cine<span>Max+</span></a>
-  <p>&copy; 2025 CineMax+. Todos los derechos reservados.</p>
-  <div class="ft-links">
-    <a href="index.html">Inicio</a>
-    <a href="#">Términos de uso</a>
-    <a href="#">Privacidad</a>
-    <a href="https://t.me/+E7lcEA9LbBgyZmI5" target="_blank">Telegram</a>
-  </div>
-</footer>
-
-<script>
-  // Header shadow on scroll
-  window.addEventListener('scroll', () => {
-    document.querySelector('header').style.boxShadow =
-      window.scrollY > 30 ? '0 4px 24px rgba(0,0,0,0.6)' : '';
-  });
-</script>
+    <footer>
+        <div class="logo">Cine<span>Max+</span></div>
+        <p style="color: var(--text-dim); margin-top: 1rem; font-size: 0.9rem;">&copy; 2025 CineMax+ Premium. Tecnología de vanguardia para el cineasta moderno.</p>
+    </footer>
 </body>
+
 </html>

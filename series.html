@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
 
   <style>
     /* ════════════════════════════════════════
@@ -22,22 +23,21 @@
 
     :root {
       --blue:  #f5c518;
-      --green: #f5c518;
-      --dark:  #000000;
-      --bg:    #000000;
-      --bg2:   #0a0a0a;
-      --card:  #111111;
-      --card2: #1a1a1a;
+      --green: #21d07a;
       --txt:   #ffffff;
       --muted: #94a3b8;
       --dim:   #4b5563;
-      --border: rgba(245,197,24,0.12);
+      --border: rgba(245,197,24,0.15);
       --r: 10px;
+      --card:  #111111;
+      --card2: #1a1a1a;
+      --bg:    #000000;
+      --bg2:   #0a0a0a;
     }
 
     html { scroll-behavior: smooth; }
     body {
-      background: var(--bg);
+      background: #000000;
       color: var(--txt);
       font-family: 'Outfit', sans-serif;
       min-height: 100vh;
@@ -51,12 +51,14 @@
        HEADER
     ════════════════════════════════════════ */
     #mainHeader {
-      position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-      background: rgba(0,0,0,0.97);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(245,197,24,0.15);
+      position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(245, 197, 24, 0.15);
       z-index: 500;
       display: flex; align-items: center;
+      transition: all 0.3s ease;
     }
     .hdr {
       max-width: 1440px; margin: 0 auto; padding: 0 1.5rem;
@@ -72,8 +74,8 @@
 
     .search-wrap {
       display: flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(245, 197, 24, 0.2);
       border-radius: 24px; padding: 7px 16px;
       transition: all 0.2s;
     }
@@ -85,10 +87,23 @@
        MAIN LAYOUT
     ════════════════════════════════════════ */
     .hero-mini {
-      padding: 100px 1.5rem 40px;
-      background: linear-gradient(160deg, #0d0d00 0%, #000000 65%);
+      padding: 120px 1.5rem 50px;
+      background: #000 url('hero-bg.png') no-repeat center center / cover;
       text-align: center;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 2px solid var(--blue);
+      position: relative;
+    }
+    .hero-mini::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-mini h1, .hero-mini p {
+      position: relative;
+      z-index: 1;
     }
     .hero-mini h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 0.5rem; }
     .hero-mini p { color: var(--muted); font-size: 1rem; }
@@ -174,9 +189,9 @@
     <div class="left-hdr">
       <a href="index.html" class="logo">Cine<span>Max+</span></a>
       <nav class="nav-items">
-        <a href="index.html">Inicio</a>
-        <a href="series.html" style="color:var(--blue)">Series</a>
-        <a href="descarga.html">Descargar la App</a>
+        <a href="descargar.html" class="btn-main"
+          style="padding: 7px 15px; background: var(--blue); color: #000; border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 0.9rem;"><i
+            class="fas fa-download"></i> Instalar App</a>
       </nav>
     </div>
     <div class="search-wrap">
@@ -189,6 +204,10 @@
 <section class="hero-mini">
   <h1>Catálogo de <span>Series</span></h1>
   <p>Explora temporadas completas con la mejor calidad premium.</p>
+  <div class="stats-row" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+    <div class="stat-chip" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 50px; padding: 7px 18px; display: flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 600;"><i class="fas fa-film" style="color:var(--blue)"></i> <span id="statMovies">—</span> Películas</div>
+    <div class="stat-chip" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 50px; padding: 7px 18px; display: flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 600;"><i class="fas fa-tv" style="color:var(--blue)"></i> <span id="statSeries">—</span> Series</div>
+  </div>
 </section>
 
 <div class="content">
@@ -206,22 +225,6 @@
 <div id="detailPanel">
   <button class="dp-back-btn" onclick="closeDetail()"><i class="fas fa-arrow-left"></i></button>
   <div id="dpContent"></div>
-</div>
-
-<!-- Player Modal -->
-<div id="playerModal">
-  <div class="player-box">
-    <div class="player-hdr">
-      <h3 id="playerTitle"></h3>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <a id="externalPlayerBtn" href="#" target="_blank" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;"><i class="fas fa-external-link-alt"></i></a>
-        <button class="player-close" onclick="closePlayer()"><i class="fas fa-times"></i></button>
-      </div>
-    </div>
-    <div class="player-frame">
-      <iframe id="mainPlayer" src="" allow="autoplay; fullscreen" referrerpolicy="no-referrer-when-downgrade" style="width:100%;height:100%;border:none;"></iframe>
-    </div>
-  </div>
 </div>
 
 <!-- NODOS OCULTOS PARA app.js -->
@@ -261,6 +264,14 @@
     }
   });
 
+  // Actualizar estadísticas globales (Landing style)
+  window.updateStats = function(m, s) {
+    const movieEl = document.getElementById('statMovies');
+    const seriesEl = document.getElementById('statSeries');
+    if (movieEl) movieEl.textContent = m;
+    if (seriesEl) seriesEl.textContent = s;
+  };
+
   // Sobrescribir renderizado para que use #allSeriesGrid
   const originalDisplay = window.displayCatalog;
   window.displayCatalog = function(filter = 'all') {
@@ -282,7 +293,7 @@
     });
   };
 
-  /* Detail Panel Logic (Same as index) */
+  /* Detail Panel Logic (Landing Version) */
   window.openDetail = async function(movie) {
     const panel = document.getElementById('detailPanel');
     const content = document.getElementById('dpContent');
@@ -296,6 +307,7 @@
       const isSerie = movie.tipo === 'serie';
       const mtype = isSerie ? 'tv' : 'movie';
       let tmdb = null;
+
       if (movie.tmdb_id && window.TMDB_API_KEY) {
         const r = await fetch(`https://api.themoviedb.org/3/${mtype}/${movie.tmdb_id}?api_key=${window.TMDB_API_KEY}&language=es-ES&append_to_response=credits`);
         if (r.ok) tmdb = await r.json();
@@ -313,9 +325,46 @@
       }
 
       const title = tmdb?.name || movie.titulo;
-      const overview = tmdb?.overview || movie.sinopsis || 'Sin descripción.';
+      const overview = tmdb?.overview || movie.sinopsis || 'Sin descripción disponible.';
       const banner = window.fixImageUrl(tmdb?.backdrop_path || movie.fondo || movie.poster, 'original');
       const poster = window.fixImageUrl(tmdb?.poster_path || movie.poster, 'w500');
+      const year = (tmdb?.first_air_date || '').slice(0, 4) || movie.año || '';
+      const numSeas = tmdb?.number_of_seasons || movie.temporadas || (seasonsData ? Object.keys(seasonsData).length : 1);
+      const episodesCount = tmdb?.number_of_episodes || (seasonsData ? Object.values(seasonsData).reduce((total, s) => total + (s.episodios ? Object.keys(s.episodios).length : 0), 0) : 0);
+
+      const watchHtml = `
+        <div style="margin-top:2rem;">
+          <a href="descargar.html" class="btn-main" style="width:100%; justify-content:center; padding:15px; font-size:1.1rem; border-radius:12px; background: linear-gradient(to right, #f5c518, #ff9800); color:#000; text-decoration:none; display:flex; align-items:center; gap:10px; font-weight:700;">
+            <i class="fas fa-download"></i> INSTALAR APP PARA VER
+          </a>
+          <p style="font-size: 0.75rem; color: var(--dim); margin-top: 10px; text-align: center;">Versión Premium disponible solo en Android</p>
+        </div>
+      `;
+
+      const seasonsHtml = `
+        <div style="margin-top:2rem; padding:1.5rem; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid var(--border); display:flex; gap:2rem; align-items:center;">
+          <div style="text-align:center; flex:1;">
+            <div style="font-size:1.8rem; font-weight:900; color:var(--blue);">${numSeas}</div>
+            <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Temporadas</div>
+          </div>
+          <div style="width:1px; height:40px; background:var(--border);"></div>
+          <div style="text-align:center; flex:1;">
+            <div style="font-size:1.8rem; font-weight:900; color:var(--blue);">${episodesCount || (numSeas * 10) + '+'}</div>
+            <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Episodios</div>
+          </div>
+        </div>`;
+
+      const appFeaturesHtml = `
+        <div class="app-features-box" style="margin-top:2.5rem; padding:2rem; background:linear-gradient(135deg, rgba(245,197,24,0.1), transparent); border-radius:15px; border:1px solid rgba(245,197,24,0.2);">
+          <p class="dp-label" style="color:var(--blue); font-size:1.1rem; font-weight:700; margin-bottom:0.5rem;"><i class="fas fa-mobile-alt"></i> La experiencia CineMax+ App</p>
+          <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.5rem;">Descarga la aplicación oficial para acceder a funciones premium exclusivas y disfrutar sin límites.</p>
+          <ul style="list-style:none; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:15px; padding:0;">
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Calidad Ultra HD y 4K</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Descargas Offline</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Transmisión a Chromecast</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Sin publicidad molesta</b></li>
+          </ul>
+        </div>`;
 
       content.innerHTML = `
         <div class="dp-hero" style="background-image:url('${banner}')"></div>
@@ -323,102 +372,24 @@
           <div class="dp-top">
             <img class="dp-poster" src="${poster}" alt="${title}">
             <div class="meta">
-              <h1 class="dp-title">${title}</h1>
+              <h1 class="dp-title">${title} ${year ? `<span style="font-weight:400;color:var(--muted);font-size:1.4rem;">(${year})</span>` : ''}</h1>
               <div class="dp-overview">${overview}</div>
+              ${seasonsHtml}
+              ${watchHtml}
+              ${appFeaturesHtml}
             </div>
           </div>
-          <div class="seasons-area" id="seasonsArea"></div>
         </div>`;
 
-      if (isSerie) renderSeasons(seasonsData, tmdb, movie);
-    } catch(e) { console.error(e); }
-  };
-
-  function renderSeasons(data, tmdb, movie) {
-    const area = document.getElementById('seasonsArea');
-    if (!area) return;
-    
-    let seasons = [];
-    if (data) Object.keys(data).forEach(k => seasons.push({ num: k, label: `Temp ${k}`, data: data[k], source: 'firebase' }));
-    else if (tmdb?.seasons) tmdb.seasons.forEach(s => { if(s.season_number>0) seasons.push({ num: s.season_number, label: `Temp ${s.season_number}`, source: 'tmdb' })});
-
-    area.innerHTML = `
-      <p style="font-weight:700;margin-bottom:1rem;font-size:1.1rem;">Temporadas</p>
-      <div class="s-tabs" id="sTabs">
-        ${seasons.map((s,i) => `<button class="s-tab ${i===0?'active':''}" onclick="selectSeason('${s.num}')" data-n="${s.num}">${s.label}</button>`).join('')}
-      </div>
-      <div class="eps-grid" id="epsGrid"></div>`;
-    
-    window._seasons = seasons;
-    if (seasons.length) selectSeason(seasons[0].num);
-  }
-
-  window.selectSeason = async function(n) {
-    document.querySelectorAll('.s-tab').forEach(t => t.classList.toggle('active', t.dataset.n == n));
-    const grid = document.getElementById('epsGrid');
-    if (!grid) return;
-    grid.innerHTML = '<div class="loader"><div class="spinner"></div></div>';
-
-    const season = (window._seasons || []).find(s => s.num == n);
-    const tmdbId = window.currentMovieData?.tmdb_id;
-    let tmdbEps = {};
-
-    if (tmdbId) {
-      const res = await fetch(`https://api.themoviedb.org/3/tv/${tmdbId}/season/${n}?api_key=${window.TMDB_API_KEY}&language=es-ES`);
-      if (res.ok) {
-        const d = await res.json();
-        d.episodes?.forEach(e => tmdbEps[e.episode_number] = e);
-      }
-    }
-
-    if (season?.source === 'firebase') {
-      const eps = season.data.episodios;
-      grid.innerHTML = Object.keys(eps).map(num => {
-        const e = typeof eps[num] === 'object' ? eps[num] : { url: eps[num] };
-        const t = tmdbEps[num] || {};
-        const thumb = e.imagen || (t.still_path ? `https://image.tmdb.org/t/p/w300${t.still_path}` : '');
-        return `
-          <div class="ep-card" onclick="playVideo('${e.url}','${(e.titulo||t.name||'E'+num).replace(/'/g,"\\'")}','')">
-            <div class="ep-thumb">
-              <img src="${thumb}" onerror="this.src='https://via.placeholder.com/300x170?text=Episodio+'+${num}">
-            </div>
-            <div class="ep-body"><div class="ep-title">${e.titulo || t.name || 'Episodio ' + num}</div></div>
-          </div>`;
-      }).join('');
-    } else {
-      grid.innerHTML = Object.values(tmdbEps).map(e => `
-        <div class="ep-card">
-          <div class="ep-thumb"><img src="https://image.tmdb.org/t/p/w300${e.still_path}"></div>
-          <div class="ep-body"><div class="ep-title">${e.name}</div></div>
-        </div>`).join('');
+    } catch(e) { 
+      console.error(e); 
+      content.innerHTML = '<p style="padding:2rem;text-align:center;">Error al cargar. Intente de nuevo.</p>';
     }
   };
 
-  window.closeDetail = () => { document.getElementById('detailPanel').classList.remove('open'); document.body.style.overflow = ''; };
-  window.playVideo = function (url, title) {
-    if (!url || !url.trim()) return;
-    let finalUrl = url.trim();
-    if (finalUrl.includes('youtube.com/watch?v=')) {
-      const id = finalUrl.split('v=')[1]?.split('&')[0];
-      if (id) finalUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
-    } else if (finalUrl.includes('youtu.be/')) {
-      const id = finalUrl.split('youtu.be/')[1]?.split('?')[0];
-      if (id) finalUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
-    }
-    document.getElementById('playerTitle').textContent = decodeURIComponent(title || '');
-    const extBtn = document.getElementById('externalPlayerBtn');
-    if (extBtn) extBtn.href = finalUrl;
-    
-    document.getElementById('mainPlayer').src = finalUrl;
-    document.getElementById('playerModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  };
-  window.closePlayer = function () {
-    const modal = document.getElementById('playerModal');
-    const iframe = document.getElementById('mainPlayer');
-    iframe.src = '';
-    modal.classList.remove('open');
-    document.body.style.overflow = '';
+  window.closeDetail = () => { 
+    document.getElementById('detailPanel').classList.remove('open'); 
+    document.body.style.overflow = ''; 
   };
 
   // Trigger load
