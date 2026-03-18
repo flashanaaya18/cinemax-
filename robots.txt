@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://flashanaaya18.github.io/cinemax-/sitemap.xml
+Sitemap: https://cinemax-cyan.vercel.app/sitemap.xml

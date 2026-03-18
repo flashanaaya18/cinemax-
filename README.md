@@ -1,4 +1,4 @@
-# 🎬 CineMax+ Premium
+go# 🎬 CineMax+ Premium
 
 ![CineMax+ Preview](https://github.com/flashanaaya18/cinemax-/raw/main/cinemax+1.png)
 
