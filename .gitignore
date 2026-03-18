@@ -15,8 +15,6 @@ dist/
 auth.js
 
 # Large files
-*.apk
-*.zip
 *.mp4
 *.png
 !Icon-192.png
