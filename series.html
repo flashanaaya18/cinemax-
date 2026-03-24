@@ -178,8 +178,16 @@
     .ft-copy { color: var(--dim); font-size: 0.85rem; margin-top: 1rem; }
 
     @media (max-width: 768px) {
-      .dp-top { grid-template-columns: 130px 1fr; gap: 1rem; }
-      .dp-poster { width: 130px; }
+      .hdr { padding: 0 1rem; justify-content: space-between; }
+      .left-hdr .logo { font-size: 1.3rem; }
+      .nav-items .btn-main { padding: 5px 12px !important; font-size: 0.8rem !important; }
+      .search-wrap { display: none; } /* Hide search bar to save space on very small screens, or place below */
+      .hero-mini { padding: 100px 1rem 30px; }
+      .hero-mini h1 { font-size: 2rem; }
+      .grid-layout { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1rem 0.8rem; }
+      .dp-top { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem; margin-top: -100px; }
+      .dp-poster { width: 150px; z-index: 5; margin-bottom: 0.5rem; }
+      .dp-title { font-size: 1.8rem; }
       .eps-grid { grid-template-columns: 1fr; }
     }
   </style>
