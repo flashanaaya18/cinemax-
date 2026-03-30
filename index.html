@@ -17,17 +17,17 @@
   <meta property="og:title" content="CineMax+ | Películas y Series Gratis en HD">
   <meta property="og:description"
     content="Disfruta de miles de películas y series sin costo. Los últimos estrenos y tendencias en alta calidad.">
-  <meta property="og:image" content="Icon-192.png">
+  <meta property="og:image" content="favicon.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:title" content="CineMax+ | Cine y Series Gratis">
   <meta property="twitter:description" content="Tu catálogo premium gratuito de películas y series.">
-  <meta property="twitter:image" content="Icon-192.png">
+  <meta property="twitter:image" content="favicon.png">
 
-  <meta name="theme-color" content="#f5c518">
-  <link rel="icon" type="image/png" href="Icon-192.png">
-  <link rel="apple-touch-icon" href="Icon-192.png">
+  <meta name="theme-color" content="#e50914">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,17 +65,18 @@
     }
 
     :root {
-      --blue: #f5c518;
-      --green: #21d07a;
+      --primary: #e50914; /* Red */
+      --accent: #f5c518;  /* Yellow */
       --txt: #ffffff;
-      --muted: #94a3b8;
-      --dim: #4b5563;
-      --border: rgba(245, 197, 24, 0.15);
-      --r: 10px;
+      --muted: #9c9c9c;
+      --dim: #606060;
+      --border: rgba(229, 9, 20, 0.2);
+      --r: 12px;
       --card: #111111;
       --card2: #1a1a1a;
       --bg: #000000;
       --bg2: #0a0a0a;
+      --bry-gradient: linear-gradient(45deg, #e50914, #f5c518);
     }
 
     html {
@@ -96,7 +97,7 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: var(--blue);
+      background: var(--bry-gradient);
       border-radius: 3px;
     }
 
@@ -116,7 +117,7 @@
       background: rgba(0, 0, 0, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(245, 197, 24, 0.15);
+      border-bottom: 1px solid rgba(229, 9, 20, 0.15);
       z-index: 500;
       display: flex;
       align-items: center;
@@ -149,7 +150,10 @@
     }
 
     .logo span {
-      color: var(--blue);
+      background: var(--bry-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .nav-items {
@@ -175,16 +179,16 @@
       align-items: center;
       gap: 8px;
       background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(245, 197, 24, 0.2);
+      border: 1px solid rgba(229, 9, 20, 0.2);
       border-radius: 24px;
       padding: 7px 16px;
       transition: all 0.2s;
     }
 
     .search-wrap:focus-within {
-      border-color: var(--blue);
+      border-color: var(--primary);
       background: rgba(255, 255, 255, 0.11);
-      box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.15);
+      box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
     }
 
     .search-wrap i {
@@ -235,7 +239,10 @@
     }
 
     .hero-banner h1 span {
-      color: var(--blue);
+      background: var(--bry-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .hero-banner p {
@@ -268,7 +275,7 @@
     }
 
     .stat-chip i {
-      color: var(--blue);
+      color: var(--accent);
     }
 
     /* ════════════════════════════════════════
@@ -303,14 +310,14 @@
       content: '';
       width: 4px;
       height: 1.1em;
-      background: var(--blue);
+      background: var(--bry-gradient);
       border-radius: 2px;
       flex-shrink: 0;
     }
 
     a.see-all {
       font-size: 0.8rem;
-      color: var(--blue);
+      color: var(--accent);
       text-decoration: none;
       font-weight: 600;
       opacity: 0.85;
@@ -349,7 +356,7 @@
       height: 38px;
       border-radius: 50%;
       background: rgba(0, 0, 0, 0.9);
-      border: 1px solid rgba(245, 197, 24, 0.3);
+      border: 1px solid rgba(229, 9, 20, 0.3);
       color: #fff;
       cursor: pointer;
       z-index: 5;
@@ -366,9 +373,9 @@
     }
 
     .row-btn:hover {
-      background: var(--blue);
-      color: #000;
-      border-color: var(--blue);
+      background: var(--bry-gradient);
+      color: #fff;
+      border-color: var(--primary);
     }
 
     .row-btn.left {
@@ -446,13 +453,9 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: var(--blue);
-      color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      box-shadow: 0 0 24px rgba(245, 197, 24, 0.4);
+      background: var(--bry-gradient);
+      color: #fff;
+      box-shadow: 0 0 24px rgba(229, 9, 20, 0.4);
       transform: scale(0.8);
       transition: transform 0.22s;
     }
@@ -547,14 +550,14 @@
     }
 
     .ftab:hover {
-      border-color: var(--blue);
-      color: var(--blue);
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .ftab.active {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: #000;
+      background: var(--bry-gradient);
+      border-color: var(--primary);
+      color: #fff;
     }
 
     /* ════════════════════════════════════════
@@ -572,7 +575,7 @@
       width: 36px;
       height: 36px;
       border: 3px solid rgba(255, 255, 255, 0.08);
-      border-top-color: var(--blue);
+      border-top-color: var(--primary);
       border-radius: 50%;
       animation: spin 0.75s linear infinite;
     }
@@ -649,9 +652,9 @@
     }
 
     .dp-back-btn:hover {
-      background: var(--blue);
-      color: #000;
-      border-color: var(--blue);
+      background: var(--bry-gradient);
+      color: #fff;
+      border-color: var(--primary);
     }
 
     .dp-inner {
@@ -688,13 +691,13 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(245, 197, 24, 0.1);
-      border: 1px solid rgba(245, 197, 24, 0.3);
+      background: rgba(229, 9, 20, 0.1);
+      border: 1px solid rgba(229, 9, 20, 0.3);
       border-radius: 20px;
       padding: 4px 14px;
       font-size: 0.73rem;
       font-weight: 800;
-      color: var(--blue);
+      color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 0.7rem;
@@ -735,9 +738,9 @@
     }
 
     .dp-tag.hl {
-      background: rgba(245, 197, 24, 0.08);
-      border-color: rgba(245, 197, 24, 0.28);
-      color: var(--blue);
+      background: rgba(229, 9, 20, 0.08);
+      border-color: rgba(229, 9, 20, 0.28);
+      color: var(--primary);
     }
 
     .score-ring {
@@ -772,8 +775,8 @@
 
     .btn-main {
       padding: 11px 26px;
-      background: var(--blue);
-      color: #000;
+      background: var(--bry-gradient);
+      color: #fff;
       border: none;
       border-radius: 8px;
       font-size: 0.95rem;

@@ -4,8 +4,8 @@
   "description": "Premium Streaming Experience for Movies and Series",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0a0a0c",
-  "theme_color": "#ffd700",
+  "background_color": "#000000",
+  "theme_color": "#e50914",
   "orientation": "landscape",
   "icons": [
     {

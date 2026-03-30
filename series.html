@@ -7,9 +7,9 @@
   <meta name="google-site-verification" content="BsDmgaYzTU7Gg_qmrTERyoId3iPY56erl15vO3F1LJI" />
   <meta name="description" content="Explora nuestro catálogo completo de series en HD. Calidad premium y streaming fluido.">
 
-  <meta name="theme-color" content="#f5c518">
-  <link rel="icon" type="image/png" href="Icon-192.png">
-  <link rel="apple-touch-icon" href="Icon-192.png">
+  <meta name="theme-color" content="#e50914">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,17 +24,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --blue:  #f5c518;
+      --primary: #e50914; /* Red */
+      --accent: #f5c518;  /* Yellow */
       --green: #21d07a;
       --txt:   #ffffff;
-      --muted: #94a3b8;
-      --dim:   #4b5563;
-      --border: rgba(245,197,24,0.15);
-      --r: 10px;
+      --muted: #9c9c9c;
+      --dim:   #606060;
+      --border: rgba(229,9,20,0.15);
+      --r: 12px;
       --card:  #111111;
       --card2: #1a1a1a;
       --bg:    #000000;
       --bg2:   #0a0a0a;
+      --bry-gradient: linear-gradient(45deg, #e50914, #f5c518);
     }
 
     html { scroll-behavior: smooth; }
@@ -46,7 +48,7 @@
       overflow-x: hidden;
     }
     ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--bry-gradient); border-radius: 3px; }
     ::-webkit-scrollbar-track { background: #111; }
 
     /* ════════════════════════════════════════
@@ -57,7 +59,7 @@
       background: rgba(0, 0, 0, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(245, 197, 24, 0.15);
+      border-bottom: 1px solid rgba(229, 9, 20, 0.15);
       z-index: 500;
       display: flex; align-items: center;
       transition: all 0.3s ease;
@@ -69,7 +71,7 @@
     }
     .left-hdr { display: flex; align-items: center; gap: 0.8rem; }
     .logo { font-size: 1.6rem; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: -0.5px; }
-    .logo span { color: var(--blue); }
+    .logo span { background: var(--bry-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
     .nav-items { display: flex; gap: 1.2rem; margin-left: 1.5rem; }
     .nav-items a { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
     .nav-items a:hover { color: #fff; }
@@ -77,11 +79,11 @@
     .search-wrap {
       display: flex; align-items: center; gap: 8px;
       background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(245, 197, 24, 0.2);
+      border: 1px solid rgba(229, 9, 20, 0.2);
       border-radius: 24px; padding: 7px 16px;
       transition: all 0.2s;
     }
-    .search-wrap:focus-within { border-color: var(--blue); background: rgba(255,255,255,0.11); box-shadow: 0 0 0 3px rgba(245,197,24,0.15); }
+    .search-wrap:focus-within { border-color: var(--primary); background: rgba(255, 255, 255, 0.11); box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15); }
     .search-wrap i { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
     #searchInput { background: none; border: none; outline: none; color: #fff; font-family: 'Outfit', sans-serif; font-size: 0.88rem; width: 185px; }
 
@@ -92,7 +94,7 @@
       padding: 120px 1.5rem 50px;
       background: #000 url('hero-bg.png') no-repeat center center / cover;
       text-align: center;
-      border-bottom: 2px solid var(--blue);
+      border-bottom: 2px solid var(--primary);
       position: relative;
     }
     .hero-mini::before {
@@ -127,7 +129,7 @@
     .movie-card:hover .card-img-wrap img { transform: scale(1.07); }
     .card-hover-layer { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 55%); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.25s; }
     .movie-card:hover .card-hover-layer { opacity: 1; }
-    .play-circle { width: 44px; height: 44px; border-radius: 50%; background: var(--blue); color: #000; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 0 24px rgba(245,197,24,0.4); transform: scale(0.8); transition: transform 0.22s; }
+    .play-circle { width: 44px; height: 44px; border-radius: 50%; background: var(--bry-gradient); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; box-shadow: 0 0 24px rgba(229, 9, 20, 0.4); transform: scale(0.8); transition: transform 0.22s; }
     .movie-card:hover .play-circle { transform: scale(1); }
     .score-dot { position: absolute; bottom: -12px; left: 8px; width: 32px; height: 32px; border-radius: 50%; background: #111; border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 0.58rem; font-weight: 800; z-index: 4; color: #fff; }
     .card-body { padding: 1rem 0 0.2rem; }
@@ -140,7 +142,7 @@
     .dp-hero { width: 100%; height: clamp(240px, 38vw, 460px); background: var(--card) no-repeat center / cover; position: relative; }
     .dp-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.15) 100%); }
     .dp-back-btn { position: absolute; top: 68px; left: 1.2rem; z-index: 10; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.2); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(6px); transition: all 0.2s; }
-    .dp-back-btn:hover { background: var(--blue); color: #000; }
+    .dp-back-btn:hover { background: var(--bry-gradient); color: #fff; }
     .dp-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem; }
     .dp-top { display: grid; grid-template-columns: 165px 1fr; gap: 1.8rem; margin-top: -75px; position: relative; z-index: 2; }
     .dp-poster { width: 165px; border-radius: 12px; border: 3px solid rgba(255,255,255,0.1); box-shadow: 0 14px 42px rgba(0,0,0,0.65); background: var(--card); }
@@ -151,10 +153,10 @@
     .seasons-area { margin-top: 2rem; }
     .s-tabs { display: flex; gap: 0.6rem; overflow-x: auto; padding-bottom: 1rem; }
     .s-tab { padding: 10px 22px; border-radius: 8px; background: var(--card); border: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-    .s-tab.active { background: var(--blue); color: #000; border-color: var(--blue); }
+    .s-tab.active { background: var(--bry-gradient); color: #fff; border-color: var(--primary); }
     .eps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1.5rem; margin-top: 1.5rem; }
     .ep-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: all 0.25s; }
-    .ep-card:hover { border-color: var(--blue); transform: translateY(-3px); }
+    .ep-card:hover { border-color: var(--primary); transform: translateY(-3px); }
     .ep-thumb { position: relative; aspect-ratio: 16/9; background: var(--card2); }
     .ep-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .ep-body { padding: 1rem; }
@@ -171,7 +173,7 @@
 
     /* Loader */
     .loader { display: flex; justify-content: center; padding: 5rem; width: 100%; }
-    .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,217,0,0.1); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .spinner { width: 40px; height: 40px; border: 3px solid rgba(229,9,20,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     footer { background: #000; padding: 3rem 1.5rem; border-top: 1px solid var(--border); text-align: center; }
@@ -200,7 +202,7 @@
       <a href="index.html" class="logo">Cine<span>Max+</span></a>
       <nav class="nav-items">
         <a href="descargar.html" class="btn-main"
-          style="padding: 7px 15px; background: var(--blue); color: #000; border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 0.9rem;"><i
+          style="padding: 7px 15px; background: var(--bry-gradient); color: #fff; border-radius: 20px; text-decoration: none; font-weight: 700; font-size: 0.9rem;"><i
             class="fas fa-download"></i> Instalar App</a>
       </nav>
     </div>
@@ -215,8 +217,8 @@
   <h1>Catálogo de <span>Series</span></h1>
   <p>Explora temporadas completas con la mejor calidad premium.</p>
   <div class="stats-row" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
-    <div class="stat-chip" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 50px; padding: 7px 18px; display: flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 600;"><i class="fas fa-film" style="color:var(--blue)"></i> <span id="statMovies">—</span> Películas</div>
-    <div class="stat-chip" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 50px; padding: 7px 18px; display: flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 600;"><i class="fas fa-tv" style="color:var(--blue)"></i> <span id="statSeries">—</span> Series</div>
+    <div class="stat-chip" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 50px; padding: 7px 18px; display: flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 600;"><i class="fas fa-film" style="color:var(--accent)"></i> <span id="statMovies">—</span> Películas</div>
+    <div class="stat-chip" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); border-radius: 50px; padding: 7px 18px; display: flex; align-items: center; gap: 7px; font-size: 0.82rem; font-weight: 600;"><i class="fas fa-tv" style="color:var(--accent)"></i> <span id="statSeries">—</span> Series</div>
   </div>
 </section>
 
@@ -344,7 +346,7 @@
 
       const watchHtml = `
         <div style="margin-top:2rem;">
-          <a href="descargar.html" class="btn-main" style="width:100%; justify-content:center; padding:15px; font-size:1.1rem; border-radius:12px; background: linear-gradient(to right, #f5c518, #ff9800); color:#000; text-decoration:none; display:flex; align-items:center; gap:10px; font-weight:700;">
+          <a href="descargar.html" class="btn-main" style="width:100%; justify-content:center; padding:15px; font-size:1.1rem; border-radius:12px; background: var(--bry-gradient); color:#fff; text-decoration:none; display:flex; align-items:center; gap:10px; font-weight:700;">
             <i class="fas fa-download"></i> INSTALAR APP PARA VER
           </a>
           <p style="font-size: 0.75rem; color: var(--dim); margin-top: 10px; text-align: center;">Versión Premium disponible solo en Android</p>
@@ -354,25 +356,25 @@
       const seasonsHtml = `
         <div style="margin-top:2rem; padding:1.5rem; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid var(--border); display:flex; gap:2rem; align-items:center;">
           <div style="text-align:center; flex:1;">
-            <div style="font-size:1.8rem; font-weight:900; color:var(--blue);">${numSeas}</div>
+            <div style="font-size:1.8rem; font-weight:900; color:var(--accent);">${numSeas}</div>
             <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Temporadas</div>
           </div>
           <div style="width:1px; height:40px; background:var(--border);"></div>
           <div style="text-align:center; flex:1;">
-            <div style="font-size:1.8rem; font-weight:900; color:var(--blue);">${episodesCount || (numSeas * 10) + '+'}</div>
+            <div style="font-size:1.8rem; font-weight:900; color:var(--accent);">${episodesCount || (numSeas * 10) + '+'}</div>
             <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Episodios</div>
           </div>
         </div>`;
 
       const appFeaturesHtml = `
-        <div class="app-features-box" style="margin-top:2.5rem; padding:2rem; background:linear-gradient(135deg, rgba(245,197,24,0.1), transparent); border-radius:15px; border:1px solid rgba(245,197,24,0.2);">
-          <p class="dp-label" style="color:var(--blue); font-size:1.1rem; font-weight:700; margin-bottom:0.5rem;"><i class="fas fa-mobile-alt"></i> La experiencia CineMax+ App</p>
+        <div class="app-features-box" style="margin-top:2.5rem; padding:2rem; background:linear-gradient(135deg, rgba(229,9,20,0.1), transparent); border-radius:15px; border:1px solid rgba(229,9,20,0.2);">
+          <p class="dp-label" style="color:var(--accent); font-size:1.1rem; font-weight:700; margin-bottom:0.5rem;"><i class="fas fa-mobile-alt"></i> La experiencia CineMax+ App</p>
           <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.5rem;">Descarga la aplicación oficial para acceder a funciones premium exclusivas y disfrutar sin límites.</p>
           <ul style="list-style:none; display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:15px; padding:0;">
-            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Calidad Ultra HD y 4K</b></li>
-            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Descargas Offline</b></li>
-            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Transmisión a Chromecast</b></li>
-            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--blue);"></i> <b>Sin publicidad molesta</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> <b>Calidad Ultra HD y 4K</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> <b>Descargas Offline</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> <b>Transmisión a Chromecast</b></li>
+            <li style="font-size:0.88rem; color:var(--txt); display:flex; align-items:center; gap:10px;"><i class="fas fa-check-circle" style="color:var(--accent);"></i> <b>Sin publicidad molesta</b></li>
           </ul>
         </div>`;
 

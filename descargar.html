@@ -11,7 +11,7 @@
     <meta name="keywords" content="CineMax+, descargar apk, peliculas gratis, series gratis, premium apk, cinemax plus">
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="BsDmgaYzTU7Gg_qmrTERyoId3iPY56erl15vO3F1LJI" />
-    <link rel="icon" type="image/png" href="Icon-192.png">
+    <link rel="icon" type="image/png" href="favicon.png">
 
     <!-- Open Graph -->
     <meta property="og:title" content="Descargar CineMax+ Premium">
@@ -28,17 +28,19 @@
     
     <style>
         :root {
-            --primary: #f5c518;
-            --primary-rgb: 245, 197, 24;
-            --accent: #ff4d4d;
-            --bg: #050505;
-            --bg-card: #0d0d0d;
+            --primary: #e50914; /* Red */
+            --accent: #f5c518;  /* Yellow */
+            --primary-rgb: 229, 9, 20;
+            --secondary-rgb: 245, 197, 24;
+            --bg: #000000;
+            --bg-card: #0a0a0a;
             --text-main: #ffffff;
-            --text-muted: #a0a0a0;
+            --text-muted: #9c9c9c;
             --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(229, 9, 20, 0.15);
             --radius: 24px;
             --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --bry-gradient: linear-gradient(45deg, #e50914, #f5c518);
         }
 
         * {
@@ -120,8 +122,11 @@
         }
 
         .logo span {
-            color: var(--primary);
-            text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.4);
+            background: var(--bry-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
         }
 
         .nav-link {
@@ -139,19 +144,19 @@
         }
 
         .btn-back {
-            background: var(--primary);
-            color: #000;
+            background: var(--bry-gradient);
+            color: #fff;
             padding: 0.75rem 1.5rem;
             border-radius: 50px;
             font-weight: 800;
             text-decoration: none;
             transition: var(--transition);
-            box-shadow: 0 10px 20px rgba(var(--primary-rgb), 0.2);
+            box-shadow: 0 10px 20px rgba(229, 9, 20, 0.2);
         }
 
         .btn-back:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(var(--primary-rgb), 0.3);
+            box-shadow: 0 15px 30px rgba(229, 9, 20, 0.3);
             filter: brightness(1.1);
         }
 
@@ -165,14 +170,14 @@
 
         .badge {
             display: inline-block;
-            background: rgba(var(--primary-rgb), 0.1);
+            background: rgba(229, 9, 20, 0.1);
             color: var(--primary);
             padding: 0.5rem 1.25rem;
             border-radius: 100px;
             font-weight: 700;
             font-size: 0.9rem;
             margin-bottom: 1.5rem;
-            border: 1px solid rgba(var(--primary-rgb), 0.2);
+            border: 1px solid rgba(229, 9, 20, 0.2);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -189,8 +194,9 @@
         }
 
         .hero h1 span {
-            background: linear-gradient(135deg, var(--primary), #fff);
+            background: var(--bry-gradient);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -253,8 +259,8 @@
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            background: var(--primary);
-            color: #000;
+            background: var(--bry-gradient);
+            color: #fff;
             padding: 1.25rem 2.5rem;
             border-radius: 18px;
             font-size: 1.25rem;
@@ -262,12 +268,12 @@
             text-decoration: none;
             transition: var(--transition);
             width: 100%;
-            box-shadow: 0 20px 40px rgba(var(--primary-rgb), 0.2);
+            box-shadow: 0 20px 40px rgba(229, 9, 20, 0.2);
         }
 
         .dl-main-btn:hover {
             transform: scale(1.02) translateY(-5px);
-            box-shadow: 0 30px 60px rgba(var(--primary-rgb), 0.3);
+            box-shadow: 0 30px 60px rgba(229, 9, 20, 0.3);
             filter: brightness(1.1);
         }
 
@@ -300,7 +306,7 @@
 
         .stat-item b {
             font-size: 1.1rem;
-            color: var(--primary);
+            color: var(--accent);
         }
 
         .app-preview-container {
@@ -400,7 +406,7 @@
         .step-num {
             font-size: 4rem;
             font-weight: 900;
-            color: rgba(var(--primary-rgb), 0.1);
+            color: rgba(229, 9, 20, 0.1);
             position: absolute;
             top: -2.5rem;
             left: -0.5rem;

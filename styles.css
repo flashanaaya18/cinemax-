@@ -1,8 +1,10 @@
 :root {
-    /* CineMax+ Original Premium - Amarillo y Negro */
-    --primary: #f5c518; 
-    --primary-light: #ffdf64;
-    --primary-glow: rgba(245, 197, 24, 0.15);
+    /* CineMax+ Premium Black-Red-Yellow Edition */
+    --primary: #e50914; /* Red */
+    --accent: #f5c518;  /* Yellow */
+    --primary-light: #ff3c3c;
+    --primary-glow: rgba(229, 9, 20, 0.25);
+    --accent-glow: rgba(245, 197, 24, 0.25);
     
     --bg-body: #000000;
     --bg-card: #0a0a0a;
@@ -10,19 +12,20 @@
     --bg-glass: rgba(0, 0, 0, 0.85);
     
     --text-main: #ffffff;
-    --text-muted: #94a3b8;
-    --text-dim: #4b5563;
+    --text-muted: #9c9c9c;
+    --text-dim: #606060;
     
     --success: #21d07a;
     --warning: #f5c518;
-    --danger: #db2360;
+    --danger: #ff0000;
     
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
-    --transition: all 0.3s ease;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
-    --glass-border: rgba(245, 197, 24, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --bry-gradient: linear-gradient(45deg, #e50914, #f5c518);
 }
 
 body {
@@ -115,8 +118,8 @@ body {
 }
 
 .scroll-btn:hover {
-    background: var(--primary);
-    color: #000;
+    background: var(--bry-gradient);
+    color: #fff;
 }
 
 .scroll-left { left: -22px; }
